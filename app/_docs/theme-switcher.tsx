@@ -28,7 +28,7 @@ function subscribe(onChange: () => void) {
   return () => observer.disconnect();
 }
 
-function useHtmlAttr(name: string, fallback: string) {
+export function useHtmlAttr(name: string, fallback: string) {
   return React.useSyncExternalStore(
     subscribe,
     () => document.documentElement.getAttribute(name) ?? fallback,
@@ -36,7 +36,7 @@ function useHtmlAttr(name: string, fallback: string) {
   );
 }
 
-function setHtmlAttr(name: string, value: string | null, storageKey: string) {
+export function setHtmlAttr(name: string, value: string | null, storageKey: string) {
   const d = document.documentElement;
   if (value === null) d.removeAttribute(name);
   else d.setAttribute(name, value);

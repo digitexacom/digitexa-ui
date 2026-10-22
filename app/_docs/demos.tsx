@@ -25,6 +25,7 @@ import { Badge, StatusBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Stat, StatGroup } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandShortcut } from "@/components/ui/command";
 import {
   Dialog,
   DialogBody,
@@ -620,6 +621,33 @@ function DropdownMenuDemo() {
   );
 }
 
+function CommandDemo() {
+  return (
+    <Command className="max-w-md rounded-lg border border-border bg-surface-raised shadow-md">
+      <CommandInput placeholder="Type a command or search…" />
+      <CommandList>
+        <CommandEmpty>Nothing matches.</CommandEmpty>
+        <CommandGroup heading="Projects">
+          <CommandItem>
+            <FolderIcon /> Storefront rebuild
+          </CommandItem>
+          <CommandItem>
+            <FolderIcon /> Driver app
+          </CommandItem>
+        </CommandGroup>
+        <CommandGroup heading="Actions">
+          <CommandItem keywords={["add"]}>
+            <PlusIcon /> New task <CommandShortcut>C</CommandShortcut>
+          </CommandItem>
+          <CommandItem keywords={["settings"]}>
+            <SettingsIcon /> Preferences <CommandShortcut>⌘,</CommandShortcut>
+          </CommandItem>
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  );
+}
+
 function DialogDemo() {
   return (
     <div className="flex gap-2">
@@ -704,6 +732,7 @@ export const demos: Record<string, React.ComponentType> = {
   tooltip: TooltipDemo,
   popover: PopoverDemo,
   "dropdown-menu": DropdownMenuDemo,
+  command: CommandDemo,
   dialog: DialogDemo,
 };
 

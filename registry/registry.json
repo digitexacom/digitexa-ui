@@ -258,6 +258,16 @@
       ]
     },
     {
+      "name": "command",
+      "type": "component",
+      "description": "Command palette with filtering, groups and full keyboard control; ⌘K hook.",
+      "files": [
+        {
+          "src": "components/ui/command.tsx"
+        }
+      ]
+    },
+    {
       "name": "dialog",
       "type": "component",
       "description": "Modal with header/body/footer, 3 sizes, scrolls when tall.",

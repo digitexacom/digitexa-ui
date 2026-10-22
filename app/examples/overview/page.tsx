@@ -3,12 +3,10 @@ import Link from "next/link";
 import {
   ActivityIcon,
   ArchiveIcon,
-  BellIcon,
   BookOpenIcon,
   BoxIcon,
   CalendarIcon,
   ChevronDownIcon,
-  ChevronsUpDownIcon,
   CodeIcon,
   FlagIcon,
   FolderIcon,
@@ -24,7 +22,6 @@ import {
   PaperclipIcon,
   PlusIcon,
   RocketIcon,
-  SearchIcon,
   SettingsIcon,
   SmartphoneIcon,
   StarIcon,
@@ -42,7 +39,6 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Kbd } from "@/components/ui/kbd";
 import { Meter } from "@/components/ui/meter";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -59,7 +55,7 @@ import {
 import { StatusIcon, statusIconLabels } from "@/components/ui/status-icon";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip } from "@/components/ui/tooltip";
-import { ThemeSwitcher } from "../../_docs/theme-switcher";
+import { Notifications, SearchPalette, UserMenu, WorkspaceSwitcher } from "./chrome";
 
 export const metadata: Metadata = { title: "Workspace overview", description: "Example app built only from Digitexa UI components." };
 
@@ -136,18 +132,11 @@ const milestones = [
   { name: "Driver app TestFlight", project: "Driver app", date: "Nov 21", status: "todo" },
 ] as const;
 
-// hidden while the sidebar is collapsed to an icon rail
-const rail = "md:in-data-[sidebar=collapsed]:hidden";
-
 function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <button className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-1 py-1 hover:bg-muted md:in-data-[sidebar=collapsed]:flex-none">
-          <span className="grid size-5 shrink-0 place-items-center rounded-sm bg-accent text-2xs font-bold text-accent-fg">N</span>
-          <span className={`truncate font-semibold ${rail}`}>Northwind Studio</span>
-          <ChevronsUpDownIcon className={`ml-auto size-3.5 text-fg-subtle ${rail}`} />
-        </button>
+        <WorkspaceSwitcher />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup title="Workspace">
@@ -212,14 +201,7 @@ function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarItem href="#" icon={<SettingsIcon />}>Settings</SidebarItem>
-        <button className="flex h-9 items-center gap-2 rounded-md px-2 text-left hover:bg-muted md:in-data-[sidebar=collapsed]:justify-center md:in-data-[sidebar=collapsed]:px-0">
-          <span className="relative">
-            <Avatar name="Mira Okafor" size="sm" />
-            <span className="absolute -right-0.5 -bottom-0.5 size-2 rounded-full bg-success ring-2 ring-bg-subtle" aria-label="Online" />
-          </span>
-          <span className={`min-w-0 flex-1 truncate font-medium ${rail}`}>Mira Okafor</span>
-          <ChevronsUpDownIcon className={`size-3.5 text-fg-subtle ${rail}`} />
-        </button>
+        <UserMenu />
       </SidebarFooter>
     </Sidebar>
   );
@@ -235,18 +217,8 @@ function AppTopbar() {
       <span className="text-fg-subtle max-sm:hidden">/</span>
       <span className="font-medium">Overview</span>
       <div className="ml-auto flex items-center gap-2">
-        <button className="flex h-(--dx-control-md) w-64 items-center gap-2 rounded-md border border-border bg-surface px-2.5 text-fg-subtle shadow-sm hover:border-border-strong max-lg:hidden">
-          <SearchIcon className="size-3.5" />
-          <span className="flex-1 text-left">Search or jump to…</span>
-          <Kbd>⌘K</Kbd>
-        </button>
-        <ThemeSwitcher />
-        <Tooltip content="Notifications">
-          <Button size="icon" variant="ghost" aria-label="Notifications" className="relative">
-            <BellIcon />
-            <span className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-accent" />
-          </Button>
-        </Tooltip>
+        <SearchPalette />
+        <Notifications />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button>
