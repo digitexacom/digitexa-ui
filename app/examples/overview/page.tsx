@@ -298,7 +298,7 @@ export default function OverviewExample() {
                   {projects.map((p) => {
                     const h = health[p.health];
                     return (
-                      <TableRow key={p.name} className="h-12">
+                      <TableRow key={p.name} className="h-[calc(var(--dx-row-height)+8px)]">
                         <TableCell>
                           <span className="flex items-center gap-2.5 font-medium">
                             <span className={`grid size-7 place-items-center rounded-md ${p.tint} [&_svg]:size-3.5`}>

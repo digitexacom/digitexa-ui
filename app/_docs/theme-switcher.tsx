@@ -46,7 +46,7 @@ export function setHtmlAttr(name: string, value: string | null, storageKey: stri
 export function ThemeSwitcher() {
   const theme = useHtmlAttr("data-theme", "system");
   const accent = useHtmlAttr("data-accent", "ember");
-  const density = useHtmlAttr("data-density", "comfortable");
+  const density = useHtmlAttr("data-density", "default");
 
   return (
     <div className="flex items-center gap-2">
@@ -74,7 +74,7 @@ export function ThemeSwitcher() {
         onValueChange={(v) => v && setHtmlAttr("data-density", v === "compact" ? v : null, "dx-density")}
         className="max-md:hidden"
       >
-        <ToggleGroupItem value="comfortable">Default</ToggleGroupItem>
+        <ToggleGroupItem value="default">Default</ToggleGroupItem>
         <ToggleGroupItem value="compact">Compact</ToggleGroupItem>
       </ToggleGroup>
 

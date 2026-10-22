@@ -15,6 +15,7 @@ import {
   MoonIcon,
   PaletteIcon,
   PlusIcon,
+  Rows3Icon,
   SearchIcon,
   SettingsIcon,
   SunIcon,
@@ -116,6 +117,7 @@ export function WorkspaceSwitcher() {
 function ThemeItems() {
   const theme = useHtmlAttr("data-theme", "system");
   const accent = useHtmlAttr("data-accent", "ember");
+  const density = useHtmlAttr("data-density", "default");
   return (
     <>
       <DropdownMenuSub>
@@ -142,6 +144,17 @@ function ThemeItems() {
                 <span className="capitalize">{a}</span>
               </DropdownMenuRadioItem>
             ))}
+          </DropdownMenuRadioGroup>
+        </DropdownMenuSubContent>
+      </DropdownMenuSub>
+      <DropdownMenuSub>
+        <DropdownMenuSubTrigger>
+          <Rows3Icon /> Density
+        </DropdownMenuSubTrigger>
+        <DropdownMenuSubContent>
+          <DropdownMenuRadioGroup value={density} onValueChange={(v) => setHtmlAttr("data-density", v === "compact" ? v : null, "dx-density")}>
+            <DropdownMenuRadioItem value="default">Default</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="compact">Compact</DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
         </DropdownMenuSubContent>
       </DropdownMenuSub>
@@ -298,6 +311,15 @@ export function SearchPalette() {
               keywords={["dark", "light", "theme", "mode"]}
             >
               <MoonIcon /> Toggle dark mode
+            </CommandItem>
+            <CommandItem
+              onSelect={run(() => {
+                const compact = document.documentElement.getAttribute("data-density") === "compact";
+                setHtmlAttr("data-density", compact ? null : "compact", "dx-density");
+              })}
+              keywords={["density", "dense", "comfortable", "rows"]}
+            >
+              <Rows3Icon /> Toggle compact density
             </CommandItem>
             <CommandItem onSelect={run()} keywords={["invite", "member"]}>
               <UserPlusIcon /> Invite members
