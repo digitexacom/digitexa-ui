@@ -24,6 +24,10 @@ curl -fsSL {{site}}/dx.mjs | node --input-type=module - add theme
 
 The first run detects your layout (including `src/`), reads the alias from `tsconfig.json` and writes `dx.json`.
 
+> A fresh create-next-app project ships starter styles (`body { font-family: Arial … }` and a white `--background`)
+> that would override the theme. The CLI removes them when they're untouched and tells you it did; styles you've
+> edited are left alone.
+
 ## Add components
 
 ```bash

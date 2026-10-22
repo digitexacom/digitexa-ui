@@ -260,15 +260,37 @@ async function wireStylesheet(config, sheets) {
       return `@import "${rel}";`;
     })
     .filter((line) => !css.includes(line));
-  if (!lines.length) return null;
-  const anchor = css.match(/^@import\s+["']tailwindcss["'][^;]*;[^\n]*$/m);
-  if (!anchor) return `Add to ${config.css}, after @import "tailwindcss":\n  ${lines.join("\n  ")}`;
-  const at = anchor.index + anchor[0].length;
-  css = css.slice(0, at) + "\n" + lines.join("\n") + css.slice(at);
+  const before = css;
+  if (lines.length) {
+    const anchor = css.match(/^@import\s+["']tailwindcss["'][^;]*;[^\n]*$/m);
+    if (!anchor) return `Add to ${config.css}, after @import "tailwindcss":\n  ${lines.join("\n  ")}`;
+    const at = anchor.index + anchor[0].length;
+    css = css.slice(0, at) + "\n" + lines.join("\n") + css.slice(at);
+  }
+
+  // create-next-app ships unlayered body/:root styles that always beat the theme; drop them when untouched
+  let removed = 0;
+  for (const block of STARTER_BLOCKS) {
+    if (block.test(css)) {
+      css = css.replace(block, "");
+      removed++;
+    }
+  }
+  css = css.replace(/\n{3,}/g, "\n\n");
+  if (css === before) return null;
   await writeFile(cssPath, css);
   console.log(c.green(`  updated  ${config.css}`));
+  if (removed) console.log(c.dim(`           removed ${removed} create-next-app starter style block(s) that override the theme`));
   return null;
 }
+
+// The exact starter styles from create-next-app; anything the user changed is left alone.
+const STARTER_BLOCKS = [
+  /:root\s*\{\s*--background:\s*#ffffff;\s*--foreground:\s*#171717;\s*\}\s*/,
+  /@theme inline\s*\{\s*--color-background:\s*var\(--background\);\s*--color-foreground:\s*var\(--foreground\);\s*--font-sans:\s*var\(--font-geist-sans\);\s*--font-mono:\s*var\(--font-geist-mono\);\s*\}\s*/,
+  /@media \(prefers-color-scheme: dark\)\s*\{\s*:root\s*\{\s*--background:\s*#0a0a0a;\s*--foreground:\s*#ededed;\s*\}\s*\}\s*/,
+  /body\s*\{\s*background:\s*var\(--background\);\s*color:\s*var\(--foreground\);\s*font-family:\s*Arial, Helvetica, sans-serif;\s*\}\s*/,
+];
 
 async function add() {
   if (!names.length) throw new Error("usage: dx add <item...>  (see `dx list`)");
