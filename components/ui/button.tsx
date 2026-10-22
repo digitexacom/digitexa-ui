@@ -39,7 +39,7 @@ const buttonVariants = cva(
 
 type ButtonProps = React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
-    /** Stili alt elemana (ör. <a>) aktarır. */
+    /** Passes the styles to the child element (e.g. <a>). */
     asChild?: boolean;
   };
 

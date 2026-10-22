@@ -22,7 +22,7 @@ export function InstallCommand({ name }: { name: string }) {
         <span className="text-fg-subtle select-none">$ </span>
         {command}
       </code>
-      <Button size="icon-sm" variant="ghost" onClick={copy} aria-label="Komutu kopyala">
+      <Button size="icon-sm" variant="ghost" onClick={copy} aria-label="Copy command">
         {copied ? <CheckIcon className="text-success" /> : <CopyIcon />}
       </Button>
     </div>

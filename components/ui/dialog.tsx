@@ -58,7 +58,7 @@ function DialogContent({ className, children, size = "md", hideClose = false, ..
             )}
           >
             <XIcon className="size-3.5" />
-            <span className="sr-only">Kapat</span>
+            <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Content>

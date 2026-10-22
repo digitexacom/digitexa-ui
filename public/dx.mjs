@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-// dx — Digitexa UI CLI. Sıfır bağımlılık, Node 18+.
+// dx — Digitexa UI CLI. Zero dependencies, Node 18+.
 //
 //   dx list
 //   dx add button dialog [--overwrite] [--no-install]
 //
-// Seçenekler:
-//   --registry <url|klasör>  varsayılan: $DX_REGISTRY ya da http://localhost:3000/r
-//   --cwd <klasör>           hedef proje (varsayılan: çalışılan klasör)
-//   --alias <önek>           "@/..." importlarını başka önekle değiştir (ör. "~/")
+// Options:
+//   --registry <url|dir>  default: $DX_REGISTRY or http://localhost:3000/r
+//   --cwd <dir>           target project (default: current directory)
+//   --alias <prefix>      rewrite "@/..." imports to another prefix (e.g. "~/")
 import { readFile, writeFile, mkdir, access } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
@@ -50,7 +50,7 @@ async function resolveAll(requested) {
     seen.add(name);
     const item = await fetchJson(name);
     for (const dep of item.requires ?? []) await visit(dep);
-    ordered.push(item); // bağımlılıklar önce
+    ordered.push(item); // dependencies first
   }
   for (const n of requested) await visit(n);
   return ordered;
@@ -63,7 +63,7 @@ function packageManager() {
 }
 
 async function add() {
-  if (!names.length) throw new Error("Kullanım: dx add <bileşen...>");
+  if (!names.length) throw new Error("Usage: dx add <component...>");
   const items = await resolveAll(names);
   const deps = new Set();
   const notes = [];
@@ -74,14 +74,14 @@ async function add() {
     for (const file of item.files) {
       const target = join(cwd, file.target);
       if ((await exists(target)) && !flags.overwrite) {
-        console.log(c.dim(`  atlandı  ${file.target} (var; üzerine yazmak için --overwrite)`));
+        console.log(c.dim(`  skipped  ${file.target} (exists; use --overwrite to replace)`));
         continue;
       }
       let content = file.content;
       if (typeof flags.alias === "string") content = content.replaceAll(`from "@/`, `from "${flags.alias}`);
       await mkdir(dirname(target), { recursive: true });
       await writeFile(target, content);
-      console.log(c.green(`  yazıldı  ${file.target}`));
+      console.log(c.green(`  wrote    ${file.target}`));
     }
   }
 
@@ -90,9 +90,9 @@ async function add() {
     const args = [pm === "npm" ? "install" : "add", ...deps];
     console.log(c.dim(`\n  ${pm} ${args.join(" ")}`));
     const r = spawnSync(pm, args, { cwd, stdio: "inherit" });
-    if (r.status !== 0) throw new Error("Bağımlılık kurulumu başarısız.");
+    if (r.status !== 0) throw new Error("Dependency install failed.");
   } else if (deps.size) {
-    console.log(c.yellow(`\n  Kurulmadı: ${[...deps].join(" ")}`));
+    console.log(c.yellow(`\n  Not installed: ${[...deps].join(" ")}`));
   }
 
   if (notes.length) console.log(c.yellow(`\n${notes.join("\n")}`));
@@ -108,7 +108,7 @@ try {
   if (command === "add") await add();
   else if (command === "list") await list();
   else {
-    console.log("dx list | dx add <bileşen...> [--registry url] [--cwd dir] [--overwrite] [--no-install] [--alias ~/]");
+    console.log("dx list | dx add <component...> [--registry url] [--cwd dir] [--overwrite] [--no-install] [--alias ~/]");
     process.exit(command ? 1 : 0);
   }
 } catch (err) {

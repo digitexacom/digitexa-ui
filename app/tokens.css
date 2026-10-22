@@ -1,18 +1,17 @@
 /*
  * Digitexa UI — design tokens
  *
- * Katmanlar:
- *   1. Ham palet (--dx-*)      → yalnızca bu dosyada kullanılır
- *   2. Semantik token'lar      → bileşenler bunları kullanır (--bg, --fg, --accent ...)
- *   3. Tailwind eşlemesi       → globals.css içinde @theme inline
+ * Layers:
+ *   1. Semantic tokens  → what components use (--bg, --fg, --accent ...)  [this file]
+ *   2. Tailwind mapping → @theme inline in theme.css
  *
- * Light :root'ta, dark ayrıca tanımlı (ters çevrilmiyor).
- * Vurgu: <html data-accent="ember|cobalt|moss|plum|rose">
- * Tema:  <html data-theme="light|dark">  (yoksa sistem tercihi)
+ * Light lives in :root; dark is defined separately (not inverted).
+ * Accent: <html data-accent="ember|cobalt|moss|plum|rose|graphite">
+ * Theme:  <html data-theme="light|dark">  (falls back to the system preference)
  */
 
 :root {
-  /* ---- tipografi: yoğun masaüstü ölçeği ---- */
+  /* ---- typography: dense desktop scale ---- */
   --font-size-2xs: 10.5px;
   --font-size-xs: 11.5px;
   --font-size-sm: 12.5px;
@@ -22,25 +21,25 @@
   --font-size-xl: 19px;
   --font-size-2xl: 24px;
 
-  /* ---- kontrol yükseklikleri ---- */
+  /* ---- control heights ---- */
   --control-sm: 24px;
   --control-md: 30px;
   --control-lg: 36px;
 
-  /* ---- köşe ---- */
+  /* ---- radius ---- */
   --radius: 6px;
   --radius-small: 4px;
   --radius-large: 9px;
   --radius-full: 999px;
 
-  /* ---- hareket ---- */
+  /* ---- motion ---- */
   --motion-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
   --motion-fast: 110ms;
   --motion: 170ms;
 }
 
 /* =========================================================
- * LIGHT — sıcak nötr (hue ≈ 75, düşük chroma)
+ * LIGHT — warm neutrals (hue ≈ 75, low chroma)
  * ========================================================= */
 :root {
   color-scheme: light;
@@ -67,7 +66,7 @@
   --elevation-2: 0 2px 6px hsl(var(--shadow-color) / 0.07), 0 1px 2px hsl(var(--shadow-color) / 0.05);
   --elevation-3: 0 12px 32px -6px hsl(var(--shadow-color) / 0.18), 0 2px 6px hsl(var(--shadow-color) / 0.06);
 
-  /* semantik */
+  /* semantic */
   --success: oklch(0.56 0.12 152);
   --success-subtle: oklch(0.95 0.035 152);
   --warning: oklch(0.66 0.14 72);
@@ -78,7 +77,7 @@
   --info: oklch(0.56 0.12 245);
   --info-subtle: oklch(0.955 0.025 245);
 
-  /* iş durumları */
+  /* work statuses */
   --status-backlog: oklch(0.63 0.01 70);
   --status-backlog-subtle: oklch(0.945 0.006 72);
   --status-todo: oklch(0.55 0.13 250);
@@ -92,7 +91,7 @@
 }
 
 /* =========================================================
- * DARK — ayrıca tanımlı, sıcak koyu yüzeyler
+ * DARK — defined on its own, warm dark surfaces
  * ========================================================= */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -191,11 +190,11 @@
 }
 
 /* =========================================================
- * VURGU RENKLERİ — data-accent
- * Her biri light + dark için ayrı değer taşır.
+ * ACCENTS — data-accent
+ * Each one carries separate light + dark values.
  * ========================================================= */
 
-/* ember (varsayılan) — yanık turuncu */
+/* ember (default) — burnt orange */
 :root,
 :root[data-accent="ember"] {
   --accent: oklch(0.6 0.165 45);
@@ -240,7 +239,7 @@
   --accent-subtle-fg: oklch(0.3 0.012 65);
 }
 
-/* dark vurgu değerleri: daha açık ton, koyu zemin üstünde okunur */
+/* dark accent values: lighter tones that read on dark surfaces */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]),
   :root:not([data-theme="light"])[data-accent="ember"] {
@@ -331,7 +330,7 @@
   --accent-subtle-fg: oklch(0.92 0.006 80);
 }
 
-/* odak halkası her zaman vurguyu izler */
+/* the focus ring always follows the accent */
 :root {
   --ring: var(--accent);
 }

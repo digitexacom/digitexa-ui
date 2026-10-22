@@ -7,15 +7,15 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin",
 
 export const metadata: Metadata = {
   title: "Digitexa UI",
-  description: "Digitexa'nın kopyala-yapıştır bileşen kiti.",
+  description: "An open-source, copy-paste component kit for dense, warm interfaces.",
 };
 
-// İlk boyamadan önce kayıtlı tema/vurguyu uygula (yanıp sönme olmasın).
+// Apply the saved theme/accent before first paint (no flash).
 const themeInit = `try{var t=localStorage.getItem("dx-theme"),a=localStorage.getItem("dx-accent"),d=document.documentElement;if(t==="light"||t==="dark")d.dataset.theme=t;if(a)d.dataset.accent=a}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="tr" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>

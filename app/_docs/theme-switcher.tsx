@@ -17,9 +17,9 @@ export const accents = [
 type Theme = "system" | "light" | "dark";
 
 const themes: { id: Theme; label: string; icon: typeof SunIcon }[] = [
-  { id: "system", label: "Sistem", icon: MonitorIcon },
-  { id: "light", label: "Açık", icon: SunIcon },
-  { id: "dark", label: "Koyu", icon: MoonIcon },
+  { id: "system", label: "System", icon: MonitorIcon },
+  { id: "light", label: "Light", icon: SunIcon },
+  { id: "dark", label: "Dark", icon: MoonIcon },
 ];
 
 function store(key: string, value: string | null) {
@@ -29,7 +29,7 @@ function store(key: string, value: string | null) {
   } catch {}
 }
 
-// <html> niteliklerini dinle: başka sekme/kod değiştirse de seçici güncel kalır.
+// Watch <html> attributes so the switcher stays in sync if other code changes them.
 function subscribe(onChange: () => void) {
   const observer = new MutationObserver(onChange);
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "data-accent"] });
@@ -62,7 +62,7 @@ export function ThemeSwitcher() {
 
   return (
     <div className="flex items-center gap-3">
-      <div role="radiogroup" aria-label="Vurgu rengi" className="flex items-center gap-1">
+      <div role="radiogroup" aria-label="Accent color" className="flex items-center gap-1">
         {accents.map((a) => (
           <button
             key={a.id}
@@ -81,7 +81,7 @@ export function ThemeSwitcher() {
         ))}
       </div>
 
-      <div role="radiogroup" aria-label="Tema" className="flex h-7 items-center rounded-md border border-border bg-bg-subtle p-0.5">
+      <div role="radiogroup" aria-label="Theme" className="flex h-7 items-center rounded-md border border-border bg-bg-subtle p-0.5">
         {themes.map(({ id, label, icon: Icon }) => (
           <button
             key={id}

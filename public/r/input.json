@@ -1,7 +1,7 @@
 {
   "name": "input",
   "type": "component",
-  "description": "3 boyut, aria-invalid hata durumu.",
+  "description": "3 sizes, error state via aria-invalid.",
   "dependencies": [
     "class-variance-authority"
   ],

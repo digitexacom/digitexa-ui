@@ -18,7 +18,7 @@ const badgeVariants = cva(
         warning: "bg-warning-subtle text-warning",
         danger: "bg-danger-subtle text-danger",
         info: "bg-info-subtle text-info",
-        // iş durumları
+        // work statuses
         backlog: "bg-status-backlog-subtle text-status-backlog",
         todo: "bg-status-todo-subtle text-status-todo",
         progress: "bg-status-progress-subtle text-status-progress",
@@ -32,17 +32,17 @@ const badgeVariants = cva(
 
 const statusLabels = {
   backlog: "Backlog",
-  todo: "Yapılacak",
-  progress: "Devam ediyor",
-  review: "İncelemede",
-  done: "Tamamlandı",
+  todo: "To do",
+  progress: "In progress",
+  review: "In review",
+  done: "Done",
 } as const;
 
 type Status = keyof typeof statusLabels;
 
 type BadgeProps = React.ComponentProps<"span"> &
   VariantProps<typeof badgeVariants> & {
-    /** Sola küçük renkli nokta koyar. */
+    /** Adds a small colored dot on the left. */
     dot?: boolean;
   };
 
@@ -55,7 +55,7 @@ function Badge({ className, variant, dot = false, children, ...props }: BadgePro
   );
 }
 
-/** Durum rozeti: <StatusBadge status="review" /> — etiket otomatik gelir. */
+/** Status badge: <StatusBadge status="review" /> — the label is filled in for you. */
 function StatusBadge({ status, children, ...props }: Omit<BadgeProps, "variant"> & { status: Status }) {
   return (
     <Badge variant={status} dot {...props}>

@@ -32,5 +32,20 @@
   },
   "bin": {
     "dx": "cli/dx.mjs"
+  },
+  "description": "Open-source, copy-paste React component kit: Next.js + Tailwind v4 + Radix, with its own registry and zero-dependency CLI.",
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "nextjs",
+    "tailwindcss",
+    "radix-ui",
+    "components",
+    "design-system",
+    "ui-kit",
+    "copy-paste"
+  ],
+  "engines": {
+    "node": ">=18"
   }
 }

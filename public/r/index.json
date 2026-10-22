@@ -4,32 +4,32 @@
     {
       "name": "utils",
       "type": "lib",
-      "description": "cn() — clsx + tailwind-merge (kendi font ölçeğimizi tanır)."
+      "description": "cn() — clsx + tailwind-merge, aware of the kit's font scale."
     },
     {
       "name": "theme",
       "type": "style",
-      "description": "Token'lar (light/dark/vurgu) ve Tailwind v4 eşlemesi. globals.css'e iki @import ekleyin."
+      "description": "Tokens (light/dark/accents) and the Tailwind v4 mapping. Add two @imports to globals.css."
     },
     {
       "name": "button",
       "type": "component",
-      "description": "6 varyant (primary, secondary, soft, ghost, danger, link), 5 boyut, asChild."
+      "description": "6 variants (primary, secondary, soft, ghost, danger, link), 5 sizes, asChild."
     },
     {
       "name": "input",
       "type": "component",
-      "description": "3 boyut, aria-invalid hata durumu."
+      "description": "3 sizes, error state via aria-invalid."
     },
     {
       "name": "badge",
       "type": "component",
-      "description": "Semantik + iş durumu varyantları (backlog/todo/progress/review/done), StatusBadge."
+      "description": "Semantic + work status variants (backlog/todo/progress/review/done), StatusBadge."
     },
     {
       "name": "dialog",
       "type": "component",
-      "description": "Radix Dialog üstünde; header/body/footer, 3 boyut."
+      "description": "Built on Radix Dialog; header/body/footer, 3 sizes."
     }
   ]
 }

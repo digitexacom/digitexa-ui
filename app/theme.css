@@ -1,7 +1,7 @@
 /*
- * Digitexa UI — Tailwind v4 eşlemesi
- * tokens.css'teki değişkenleri utility'lere bağlar (bg-surface, text-fg-muted, bg-status-done ...)
- * ve dark: varyantını data-theme + sistem tercihine göre tanımlar.
+ * Digitexa UI — Tailwind v4 mapping
+ * Binds the variables from tokens.css to utilities (bg-surface, text-fg-muted, bg-status-done ...)
+ * and defines the dark: variant from data-theme + the system preference.
  */
 
 @custom-variant dark {
@@ -15,7 +15,7 @@
   }
 }
 
-/* Token'ları Tailwind utility'lerine bağla: bg-surface, text-fg-muted, border-border ... */
+/* Map tokens to Tailwind utilities: bg-surface, text-fg-muted, border-border ... */
 @theme inline {
   --font-sans: var(--font-geist-sans, ui-sans-serif), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono, ui-monospace), monospace;
@@ -106,7 +106,7 @@
     -webkit-font-smoothing: antialiased;
     font-feature-settings: "cv11", "ss01";
   }
-  /* Tailwind v4 butonlara cursor: default veriyor; tıklanabilir her şey pointer olsun. */
+  /* Tailwind v4 gives buttons cursor: default; anything clickable should get a pointer. */
   button,
   [role="button"],
   [role="radio"],
