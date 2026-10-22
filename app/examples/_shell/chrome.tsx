@@ -2,6 +2,7 @@
 
 // Interactive pieces of the example app: workspace switcher, user menu, notifications, search palette.
 import * as React from "react";
+import Link from "next/link";
 import {
   BellIcon,
   CheckIcon,
@@ -13,7 +14,6 @@ import {
   LogOutIcon,
   MonitorIcon,
   MoonIcon,
-  PaletteIcon,
   PlusIcon,
   Rows3Icon,
   SearchIcon,
@@ -39,21 +39,16 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Kbd } from "@/components/ui/kbd";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useSidebar } from "@/components/ui/sidebar";
 import { StatusIcon } from "@/components/ui/status-icon";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Tooltip } from "@/components/ui/tooltip";
-import { accents, setHtmlAttr, useHtmlAttr } from "../../_docs/theme-switcher";
+import { setHtmlAttr, useHtmlAttr } from "../../_docs/theme-switcher";
 
 // hidden while the sidebar is collapsed to an icon rail
 const rail = "md:in-data-[sidebar=collapsed]:hidden";
@@ -114,51 +109,35 @@ export function WorkspaceSwitcher() {
   );
 }
 
-function ThemeItems() {
+const themes = [
+  { id: "light", label: "Light", icon: SunIcon },
+  { id: "dark", label: "Dark", icon: MoonIcon },
+  { id: "system", label: "System", icon: MonitorIcon },
+] as const;
+
+/** Inline theme switcher inside the menu; picking a theme keeps the menu open. */
+function ThemeRow() {
   const theme = useHtmlAttr("data-theme", "system");
-  const accent = useHtmlAttr("data-accent", "ember");
-  const density = useHtmlAttr("data-density", "default");
   return (
-    <>
-      <DropdownMenuSub>
-        <DropdownMenuSubTrigger>
-          {theme === "dark" ? <MoonIcon /> : theme === "light" ? <SunIcon /> : <MonitorIcon />} Theme
-        </DropdownMenuSubTrigger>
-        <DropdownMenuSubContent>
-          <DropdownMenuRadioGroup value={theme} onValueChange={(v) => setHtmlAttr("data-theme", v === "system" ? null : v, "dx-theme")}>
-            <DropdownMenuRadioItem value="system">System</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="light">Light</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuSubContent>
-      </DropdownMenuSub>
-      <DropdownMenuSub>
-        <DropdownMenuSubTrigger>
-          <PaletteIcon /> Accent
-        </DropdownMenuSubTrigger>
-        <DropdownMenuSubContent>
-          <DropdownMenuRadioGroup value={accent} onValueChange={(v) => setHtmlAttr("data-accent", v, "dx-accent")}>
-            {accents.map((a) => (
-              <DropdownMenuRadioItem key={a} value={a}>
-                <span data-accent={a} className="size-2.5 rounded-full bg-accent" />
-                <span className="capitalize">{a}</span>
-              </DropdownMenuRadioItem>
-            ))}
-          </DropdownMenuRadioGroup>
-        </DropdownMenuSubContent>
-      </DropdownMenuSub>
-      <DropdownMenuSub>
-        <DropdownMenuSubTrigger>
-          <Rows3Icon /> Density
-        </DropdownMenuSubTrigger>
-        <DropdownMenuSubContent>
-          <DropdownMenuRadioGroup value={density} onValueChange={(v) => setHtmlAttr("data-density", v === "compact" ? v : null, "dx-density")}>
-            <DropdownMenuRadioItem value="default">Default</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="compact">Compact</DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuSubContent>
-      </DropdownMenuSub>
-    </>
+    <div className="px-2 pt-1 pb-2">
+      <div className="pb-1.5 text-2xs font-medium tracking-wide text-fg-subtle uppercase">Theme</div>
+      {/* arrow keys belong to the toggle group here, not to the menu */}
+      <div onKeyDown={(e) => ["ArrowLeft", "ArrowRight"].includes(e.key) && e.stopPropagation()}>
+        <ToggleGroup
+          type="single"
+          aria-label="Theme"
+          value={theme}
+          onValueChange={(v) => v && setHtmlAttr("data-theme", v === "system" ? null : v, "dx-theme")}
+          className="grid w-full grid-cols-3"
+        >
+          {themes.map(({ id, label, icon: Icon }) => (
+            <ToggleGroupItem key={id} value={id}>
+              <Icon /> {label}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+      </div>
+    </div>
   );
 }
 
@@ -178,28 +157,32 @@ export function UserMenu() {
           <ChevronsUpDownIcon className={`size-3.5 shrink-0 text-fg-subtle ${rail}`} />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent side="top" className="w-60">
-        <div className="flex items-center gap-2 px-2 py-1.5">
-          <Avatar name="Mira Okafor" size="lg" />
+      <DropdownMenuContent side="top" className="w-64">
+        <div className="flex items-center gap-3 px-2 py-2.5">
+          <Avatar name="Mira Okafor" size="xl" />
           <div className="min-w-0">
-            <div className="truncate font-medium">Mira Okafor</div>
-            <div className="truncate text-xs text-fg-subtle">mira@northwind.example</div>
+            <div className="truncate font-semibold">Mira Okafor</div>
+            <div className="truncate text-sm text-fg-muted">mira@northwind.example</div>
           </div>
         </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <CircleUserIcon /> Profile
+        <DropdownMenuItem asChild>
+          <Link href="/examples/settings#profile">
+            <CircleUserIcon /> View profile
+          </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <SettingsIcon /> Preferences <DropdownMenuShortcut>⌘,</DropdownMenuShortcut>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <KeyboardIcon /> Keyboard shortcuts <DropdownMenuShortcut>?</DropdownMenuShortcut>
+        <DropdownMenuItem asChild>
+          <Link href="/examples/settings#appearance">
+            <SettingsIcon /> Account settings
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <ThemeItems />
+        <ThemeRow />
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant="danger">
+        <DropdownMenuItem>
+          <KeyboardIcon /> Keyboard shortcuts <Kbd className="ml-auto">?</Kbd>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
           <LogOutIcon /> Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>
