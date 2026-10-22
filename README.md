@@ -2,6 +2,8 @@
 
 An open-source, copy-paste component kit for dense, warm desktop interfaces.
 
+**Docs:** https://ui.digitexa.com
+
 Components aren't installed as a package. They're written into your project as files you own and edit.
 Built on Next.js (App Router), Tailwind CSS v4, Radix primitives and `class-variance-authority`.
 The registry format and the CLI are part of this repo; there's no dependency on any other component tool.
@@ -22,7 +24,7 @@ The registry format and the CLI are part of this repo; there's no dependency on 
 Requirements: Tailwind CSS v4, Node 20+, and an import alias such as `"@/*": ["./*"]` (or `["./src/*"]`) in `tsconfig.json`.
 
 ```bash
-curl -fsSL https://<your-docs-site>/dx.mjs | node --input-type=module - add theme button dialog
+curl -fsSL https://ui.digitexa.com/dx.mjs | node --input-type=module - add theme button dialog
 ```
 
 The first run detects your layout (including `src/`), writes `dx.json`, adds the theme imports to your global

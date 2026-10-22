@@ -77,7 +77,7 @@
     "type": "git",
     "url": "git+https://github.com/digitexacom/digitexa-ui.git"
   },
-  "homepage": "https://digitexa-ui.vercel.app",
+  "homepage": "https://ui.digitexa.com",
   "bugs": {
     "url": "https://github.com/digitexacom/digitexa-ui/issues"
   }
