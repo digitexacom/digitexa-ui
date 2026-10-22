@@ -106,6 +106,35 @@
     -webkit-font-smoothing: antialiased;
     font-feature-settings: "cv11", "ss01";
   }
+  /* Tailwind v4 butonlara cursor: default veriyor; tıklanabilir her şey pointer olsun. */
+  button,
+  [role="button"],
+  [role="radio"],
+  [role="checkbox"],
+  [role="switch"],
+  [role="tab"],
+  [role="option"],
+  [role="menuitem"],
+  a[href],
+  label[for],
+  select,
+  summary,
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="file"],
+  input[type="submit"],
+  input[type="button"],
+  input[type="reset"],
+  input[type="range"],
+  input[type="color"],
+  ::file-selector-button {
+    cursor: pointer;
+  }
+  :disabled,
+  [aria-disabled="true"],
+  [data-disabled] {
+    cursor: not-allowed;
+  }
   ::selection {
     background: var(--accent-subtle);
     color: var(--fg);
