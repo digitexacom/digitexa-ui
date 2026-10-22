@@ -184,13 +184,32 @@ async function itemMarkdown(item, { withSource }) {
 }
 
 const header = `# Digitexa UI\n\n> Open-source, copy-paste React components for dense, warm desktop interfaces (Next.js, Tailwind CSS v4, Radix). Components are installed as source files with the \`dx\` CLI and styled only with semantic --dx-* tokens.\n`;
+// docs pages as Markdown too: /md/<page>.md
+const mdDir = join(root, "public", "md");
+await rm(mdDir, { recursive: true, force: true });
+await mkdir(mdDir, { recursive: true });
+const contentDir = join(root, "content", "docs");
+const docFiles = existsSync(contentDir) ? (await readdir(contentDir)).filter((f) => f.endsWith(".md")) : [];
+for (const f of docFiles) {
+  let md = (await readFile(join(contentDir, f), "utf8")).replaceAll("{{site}}", docsBase);
+  const front = md.match(/^---\n([\s\S]*?)\n---\n/);
+  if (front) {
+    const title = front[1].match(/title:\s*(.*)/)?.[1] ?? f.slice(0, -3);
+    const description = front[1].match(/description:\s*(.*)/)?.[1] ?? "";
+    md = `# ${title}\n\n${description}\n${md.slice(front[0].length)}`;
+  }
+  await writeFile(join(mdDir, f), md);
+}
+await writeFile(join(mdDir, "changelog.md"), await readFile(join(root, "CHANGELOG.md"), "utf8"));
+
 const index = [
   header,
   "## Start here",
   "",
   `- [Rules for AI agents](${docsBase}/docs/ai): how to write UI with this kit`,
   `- [Full reference](${docsBase}/llms-full.txt): rules, tokens, and every component's API, example and source in one file`,
-  `- [Install](${docsBase}/#installation): \`${installLine("theme", "button")}\``,
+  ...docFiles.map((f) => `- [${f.slice(0, -3)}](${docsBase}/md/${f})`),
+  `- [changelog](${docsBase}/md/changelog.md)`,
   "",
   "## Components",
   "",

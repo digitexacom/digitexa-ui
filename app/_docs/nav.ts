@@ -45,3 +45,27 @@ export const componentGroups = groups.map((g) => ({
 }));
 
 export const allComponents: DocItem[] = componentGroups.flatMap((g) => g.items);
+
+/** Left sidebar "Sections" and the top-level docs order (prev/next follows it). */
+export const docsSections = [
+  { href: "/docs", title: "Introduction" },
+  { href: "/docs/components", title: "Components" },
+  { href: "/docs/installation", title: "Installation" },
+  { href: "/docs/theming", title: "Theming" },
+  { href: "/docs/cli", title: "CLI" },
+  { href: "/docs/ai", title: "For AI agents" },
+  { href: "/docs/changelog", title: "Changelog" },
+];
+
+export const sortedComponents = [...allComponents].sort((a, b) => a.title.localeCompare(b.title));
+
+export const examples = [
+  { href: "/examples/overview", title: "Workspace overview" },
+  { href: "/examples/settings", title: "Settings" },
+];
+
+/** Every docs page in reading order, for prev/next links. */
+export const docsOrder = [
+  ...docsSections.map((s) => ({ href: s.href, title: s.title })),
+  ...sortedComponents.map((c) => ({ href: `/docs/components/${c.slug}`, title: c.title })),
+];

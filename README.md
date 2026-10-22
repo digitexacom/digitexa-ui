@@ -41,13 +41,22 @@ detection got something wrong.
 
 ## Components
 
-Forms: button, input, textarea, label, checkbox, radio-group, switch, select, toggle-group ·
-Data display: badge, status-icon, avatar, kbd, card (+ stat), table, progress, meter ·
-Overlays: dialog, command, popover, dropdown-menu, tooltip ·
-Layout: sidebar (app shell), tabs, separator, skeleton
+53 components, each with a docs page (live preview, example code, install command and source):
 
-The docs site has a page per component with a live preview and the exact source the CLI installs, plus a full
-example app at `/examples/overview` and `/examples/settings`.
+- **Forms:** button, input, input-group, textarea, label, field, checkbox, radio-group, switch, select, combobox,
+  slider, toggle, toggle-group, date-picker
+- **Data display:** badge, status-icon, avatar, kbd, card (+ stat), table, data-table, pagination, progress, meter, calendar
+- **Overlays:** dialog, alert-dialog, sheet, command, popover, hover-card, dropdown-menu, context-menu, tooltip
+- **Feedback:** alert, toast, spinner, skeleton, empty-state
+- **Layout:** sidebar (app shell), tabs, accordion, collapsible, breadcrumb, scroll-area, separator
+- **Project management:** task-row, kanban, timeline, calendar-view, activity-feed, priority
+
+Example apps live at `/examples/overview` and `/examples/settings`.
+
+## For AI agents
+
+The build publishes `/llms.txt`, `/llms-full.txt` (rules, tokens, and every component's API, example and source),
+`/r/<name>.md` per component and `/md/<page>.md` per docs page. The rules live in `registry/ai-rules.md`.
 
 ## Browser support
 
@@ -73,6 +82,8 @@ the published CLI points at your registry.
 | `registry/registry.json` | Registry items; dependencies are derived from imports |
 | `scripts/build-registry.mjs` | Validates and builds `public/r/*.json` and `public/dx.mjs` |
 | `scripts/check-contrast.mjs` | WCAG check for every token pair |
+| `content/docs/*.md` | Docs pages (Introduction, Installation, Theming, CLI) |
+| `app/_docs/demos/*.tsx` | One demo per component; also published as the usage example |
 | `cli/dx.mjs` | Zero-dependency CLI |
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) to add a component.

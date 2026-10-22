@@ -51,3 +51,4 @@ next-env.d.ts
 /app/_docs/demos.gen.tsx
 /public/llms.txt
 /public/llms-full.txt
+/public/md/

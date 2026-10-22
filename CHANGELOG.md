@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Docs site rebuilt: homepage with a live showcase, `/docs` with sections and components sidebar, "On this page",
+  Copy page (Markdown, open in Claude/ChatGPT), ⌘K search, Installation/Theming/CLI pages, `/docs/components` index.
+- 28 new components: slider, toggle, field, input-group, calendar, date-picker, combobox, alert, alert-dialog,
+  sheet, toast, spinner, empty-state, hover-card, context-menu, accordion, collapsible, breadcrumb, pagination,
+  scroll-area, data-table, priority, task-row, kanban, timeline, calendar-view, activity-feed, plus `use-now`.
+- AI docs: `/llms.txt`, `/llms-full.txt`, `/r/<name>.md`, `/md/<page>.md` and the For AI agents page.
+- Button `loading`, Avatar `status`.
+
 - Example settings screen (`/examples/settings`): theme cards, accent, interface and sidebar density, motion,
   workspace and profile forms, notification switches.
 - New components: `radio-group` (with `RadioCard`), `command` (⌘K palette).
