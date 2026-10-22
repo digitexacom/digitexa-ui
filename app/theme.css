@@ -1,0 +1,124 @@
+/*
+ * Digitexa UI — Tailwind v4 eşlemesi
+ * tokens.css'teki değişkenleri utility'lere bağlar (bg-surface, text-fg-muted, bg-status-done ...)
+ * ve dark: varyantını data-theme + sistem tercihine göre tanımlar.
+ */
+
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+  &:where([data-theme="dark"] *) {
+    @slot;
+  }
+}
+
+/* Token'ları Tailwind utility'lerine bağla: bg-surface, text-fg-muted, border-border ... */
+@theme inline {
+  --font-sans: var(--font-geist-sans, ui-sans-serif), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono, ui-monospace), monospace;
+
+  --text-2xs: var(--font-size-2xs);
+  --text-2xs--line-height: 14px;
+  --text-xs: var(--font-size-xs);
+  --text-xs--line-height: 16px;
+  --text-sm: var(--font-size-sm);
+  --text-sm--line-height: 18px;
+  --text-base: var(--font-size-base);
+  --text-base--line-height: 19px;
+  --text-md: var(--font-size-md);
+  --text-md--line-height: 20px;
+  --text-lg: var(--font-size-lg);
+  --text-lg--line-height: 22px;
+  --text-xl: var(--font-size-xl);
+  --text-xl--line-height: 26px;
+  --text-2xl: var(--font-size-2xl);
+  --text-2xl--line-height: 30px;
+
+  --radius-sm: var(--radius-small);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius-large);
+
+  --shadow-sm: var(--elevation-1);
+  --shadow-md: var(--elevation-2);
+  --shadow-lg: var(--elevation-3);
+
+  --color-bg: var(--bg);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-muted: var(--muted);
+  --color-muted-hover: var(--muted-hover);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-fg-disabled: var(--fg-disabled);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-overlay: var(--overlay);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-accent-subtle-fg: var(--accent-subtle-fg);
+
+  --color-success: var(--success);
+  --color-success-subtle: var(--success-subtle);
+  --color-warning: var(--warning);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-danger: var(--danger);
+  --color-danger-subtle: var(--danger-subtle);
+  --color-danger-fg: var(--danger-fg);
+  --color-info: var(--info);
+  --color-info-subtle: var(--info-subtle);
+
+  --color-status-backlog: var(--status-backlog);
+  --color-status-backlog-subtle: var(--status-backlog-subtle);
+  --color-status-todo: var(--status-todo);
+  --color-status-todo-subtle: var(--status-todo-subtle);
+  --color-status-progress: var(--status-progress);
+  --color-status-progress-subtle: var(--status-progress-subtle);
+  --color-status-review: var(--status-review);
+  --color-status-review-subtle: var(--status-review-subtle);
+  --color-status-done: var(--status-done);
+  --color-status-done-subtle: var(--status-done-subtle);
+
+  --ease-out: var(--motion-ease);
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-base);
+    line-height: 19px;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+  ::selection {
+    background: var(--accent-subtle);
+    color: var(--fg);
+  }
+}
+
+@keyframes dx-fade-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes dx-fade-out { from { opacity: 1 } to { opacity: 0 } }
+@keyframes dx-pop-in {
+  from { opacity: 0; transform: translate(-50%, -48%) scale(0.97) }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1) }
+}
+@keyframes dx-pop-out {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1) }
+  to { opacity: 0; transform: translate(-50%, -48%) scale(0.97) }
+}

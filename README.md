@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Digitexa UI
 
-## Getting Started
+Kendi kopyala-yapıştır bileşen kitimiz. Bileşenler paket olarak değil, hedef projeye dosya olarak yazılır.
+Next.js (App Router) + Tailwind v4 + Radix + class-variance-authority. shadcn'e bağımlılık yok: registry formatı ve CLI bizim.
 
-First, run the development server:
+## Geliştirme
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev        # doküman sitesi → http://localhost:3000
+npm run registry   # registry/registry.json → public/r/*.json + public/dx.mjs
+npm run build      # registry + next build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Yapı
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Yol | Ne |
+|---|---|
+| `app/tokens.css` | Token değerleri: light `:root`, dark ayrı (`prefers-color-scheme` + `[data-theme=dark]`), `[data-accent]` ile 6 vurgu |
+| `app/theme.css` | Tailwind v4 eşlemesi (`bg-surface`, `text-fg-muted`, `bg-status-done` …) ve `dark:` varyantı |
+| `components/ui/*` | Bileşenler |
+| `registry/registry.json` | Kayıtlar: dosyalar, npm bağımlılıkları, `requires` (diğer kayıtlar) |
+| `cli/dx.mjs` | Sıfır bağımlılıklı CLI (`dx list`, `dx add …`) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Başka projeye kurulum
 
-## Learn More
+```bash
+curl -fsSL <site>/dx.mjs | node --input-type=module - add theme button --registry <site>/r
+```
 
-To learn more about Next.js, take a look at the following resources:
+`--cwd <klasör>`, `--overwrite`, `--no-install`, `--alias ~/` desteklenir. Yerel klasörden de çalışır:
+`node cli/dx.mjs add button --registry ./public/r --cwd ../baska-proje`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Yeni bileşen: `components/ui/x.tsx` yaz → `registry/registry.json`'a kayıt ekle → `npm run registry`.

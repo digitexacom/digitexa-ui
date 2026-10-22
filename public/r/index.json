@@ -1,0 +1,35 @@
+{
+  "name": "digitexa-ui",
+  "items": [
+    {
+      "name": "utils",
+      "type": "lib",
+      "description": "cn() — clsx + tailwind-merge (kendi font ölçeğimizi tanır)."
+    },
+    {
+      "name": "theme",
+      "type": "style",
+      "description": "Token'lar (light/dark/vurgu) ve Tailwind v4 eşlemesi. globals.css'e iki @import ekleyin."
+    },
+    {
+      "name": "button",
+      "type": "component",
+      "description": "6 varyant (primary, secondary, soft, ghost, danger, link), 5 boyut, asChild."
+    },
+    {
+      "name": "input",
+      "type": "component",
+      "description": "3 boyut, aria-invalid hata durumu."
+    },
+    {
+      "name": "badge",
+      "type": "component",
+      "description": "Semantik + iş durumu varyantları (backlog/todo/progress/review/done), StatusBadge."
+    },
+    {
+      "name": "dialog",
+      "type": "component",
+      "description": "Radix Dialog üstünde; header/body/footer, 3 boyut."
+    }
+  ]
+}

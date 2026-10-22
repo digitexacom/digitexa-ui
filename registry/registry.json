@@ -1,0 +1,55 @@
+{
+  "$comment": "Digitexa UI registry. `npm run registry` bunu public/r/*.json'a derler.",
+  "name": "digitexa-ui",
+  "items": [
+    {
+      "name": "utils",
+      "type": "lib",
+      "description": "cn() — clsx + tailwind-merge (kendi font ölçeğimizi tanır).",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "files": [{ "src": "lib/utils.ts", "target": "lib/utils.ts" }]
+    },
+    {
+      "name": "theme",
+      "type": "style",
+      "description": "Token'lar (light/dark/vurgu) ve Tailwind v4 eşlemesi. globals.css'e iki @import ekleyin.",
+      "files": [
+        { "src": "app/tokens.css", "target": "app/dx-tokens.css" },
+        { "src": "app/theme.css", "target": "app/dx-theme.css" }
+      ],
+      "notes": "globals.css'te `@import \"tailwindcss\";` satırının altına ekleyin:\n  @import \"./dx-tokens.css\";\n  @import \"./dx-theme.css\";"
+    },
+    {
+      "name": "button",
+      "type": "component",
+      "description": "6 varyant (primary, secondary, soft, ghost, danger, link), 5 boyut, asChild.",
+      "dependencies": ["@radix-ui/react-slot", "class-variance-authority"],
+      "requires": ["utils", "theme"],
+      "files": [{ "src": "components/ui/button.tsx", "target": "components/ui/button.tsx" }]
+    },
+    {
+      "name": "input",
+      "type": "component",
+      "description": "3 boyut, aria-invalid hata durumu.",
+      "dependencies": ["class-variance-authority"],
+      "requires": ["utils", "theme"],
+      "files": [{ "src": "components/ui/input.tsx", "target": "components/ui/input.tsx" }]
+    },
+    {
+      "name": "badge",
+      "type": "component",
+      "description": "Semantik + iş durumu varyantları (backlog/todo/progress/review/done), StatusBadge.",
+      "dependencies": ["class-variance-authority"],
+      "requires": ["utils", "theme"],
+      "files": [{ "src": "components/ui/badge.tsx", "target": "components/ui/badge.tsx" }]
+    },
+    {
+      "name": "dialog",
+      "type": "component",
+      "description": "Radix Dialog üstünde; header/body/footer, 3 boyut.",
+      "dependencies": ["@radix-ui/react-dialog", "lucide-react"],
+      "requires": ["utils", "theme"],
+      "files": [{ "src": "components/ui/dialog.tsx", "target": "components/ui/dialog.tsx" }]
+    }
+  ]
+}
