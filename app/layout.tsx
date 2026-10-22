@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 // Apply the saved theme/accent before first paint (no flash).
-const themeInit = `try{var s=localStorage,d=document.documentElement,t=s.getItem("dx-theme"),a=s.getItem("dx-accent"),n=s.getItem("dx-density");if(t==="light"||t==="dark")d.setAttribute("data-theme",t);if(a&&/^[a-z]+$/.test(a))d.setAttribute("data-accent",a);if(n==="compact")d.setAttribute("data-density",n);if(s.getItem("dx-sidebar")==="collapsed")d.setAttribute("data-sidebar","collapsed")}catch(e){}`;
+const themeInit = `try{var s=localStorage,d=document.documentElement,t=s.getItem("dx-theme"),a=s.getItem("dx-accent"),n=s.getItem("dx-density");if(t==="light"||t==="dark")d.setAttribute("data-theme",t);if(a&&/^[a-z]+$/.test(a))d.setAttribute("data-accent",a);if(n==="compact")d.setAttribute("data-density",n);var m=s.getItem("dx-motion");if(m==="reduce"||m==="full")d.setAttribute("data-motion",m);if(s.getItem("dx-sidebar-density")==="compact")d.setAttribute("data-sidebar-density","compact");if(s.getItem("dx-sidebar")==="collapsed")d.setAttribute("data-sidebar","collapsed")}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

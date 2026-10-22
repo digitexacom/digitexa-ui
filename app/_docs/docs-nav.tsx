@@ -12,7 +12,10 @@ const guides = [
   { href: "/#installation", title: "Installation" },
   { href: "/#tokens", title: "Tokens" },
 ];
-const examples = [{ href: "/examples/overview", title: "Workspace overview" }];
+const examples = [
+  { href: "/examples/overview", title: "Workspace overview" },
+  { href: "/examples/settings", title: "Settings" },
+];
 
 function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
   const pathname = usePathname();

@@ -56,6 +56,7 @@ import { Label } from "@/components/ui/label";
 import { Meter } from "@/components/ui/meter";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Progress } from "@/components/ui/progress";
+import { RadioCard, RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -190,6 +191,40 @@ function CheckboxDemo() {
         <Checkbox id="cb-2" disabled />
         <Label htmlFor="cb-2">Disabled</Label>
       </div>
+    </div>
+  );
+}
+
+function RadioGroupDemo() {
+  return (
+    <div className="flex flex-col gap-5">
+      <RadioGroup defaultValue="week" aria-label="Digest frequency">
+        {[
+          ["day", "Every day"],
+          ["week", "Every week"],
+          ["never", "Never"],
+        ].map(([value, label]) => (
+          <div key={value} className="flex items-center gap-2">
+            <RadioGroupItem id={`freq-${value}`} value={value} />
+            <Label htmlFor={`freq-${value}`}>{label}</Label>
+          </div>
+        ))}
+      </RadioGroup>
+      <RadioGroup defaultValue="board" aria-label="Default view" className="max-w-md grid-cols-3">
+        {[
+          ["board", "Board", LayoutGridIcon],
+          ["list", "List", ListIcon],
+          ["timeline", "Timeline", ArrowRightIcon],
+        ].map(([value, label, Icon]) => {
+          const I = Icon as typeof ListIcon;
+          return (
+            <RadioCard key={value as string} value={value as string} className="p-3">
+              <I className="size-4 text-fg-subtle" />
+              <span className="font-medium">{label as string}</span>
+            </RadioCard>
+          );
+        })}
+      </RadioGroup>
     </div>
   );
 }
@@ -714,6 +749,7 @@ export const demos: Record<string, React.ComponentType> = {
   textarea: TextareaDemo,
   label: LabelDemo,
   checkbox: CheckboxDemo,
+  "radio-group": RadioGroupDemo,
   switch: SwitchDemo,
   select: SelectDemo,
   "toggle-group": ToggleGroupDemo,

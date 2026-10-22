@@ -12,7 +12,8 @@ The registry format and the CLI are part of this repo; there's no dependency on 
   Every text/background pair is checked against WCAG in CI.
 - **Swappable accent.** `<html data-accent="ember | cobalt | moss | plum | rose | graphite">`, also per element.
 - **Dark mode.** Follows the system, or force it with `<html data-theme="dark | light">`.
-- **Dense scale.** 13px base font, 20 / 24 / 30 / 36px controls, 4pt spacing, and `data-density="compact"`.
+- **Dense scale.** 13px base font, 20 / 24 / 30 / 36px controls, 4pt spacing, and `data-density="compact"`
+  (or `data-sidebar-density="compact"` for just the sidebar). `data-motion="reduce"` turns animations off.
 - **Work statuses built in.** `backlog`, `todo`, `progress`, `review`, `done`, as badges, icons and meters.
 - **No collisions.** All tokens are prefixed `--dx-*`, so the kit can live next to other design systems.
 
@@ -40,13 +41,13 @@ detection got something wrong.
 
 ## Components
 
-Forms: button, input, textarea, label, checkbox, switch, select, toggle-group ·
+Forms: button, input, textarea, label, checkbox, radio-group, switch, select, toggle-group ·
 Data display: badge, status-icon, avatar, kbd, card (+ stat), table, progress, meter ·
-Overlays: dialog, popover, dropdown-menu, tooltip ·
+Overlays: dialog, command, popover, dropdown-menu, tooltip ·
 Layout: sidebar (app shell), tabs, separator, skeleton
 
 The docs site has a page per component with a live preview and the exact source the CLI installs, plus a full
-example app at `/examples/overview`.
+example app at `/examples/overview` and `/examples/settings`.
 
 ## Browser support
 

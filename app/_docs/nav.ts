@@ -6,7 +6,7 @@ const titles: Record<string, string> = { "dropdown-menu": "Dropdown menu", "togg
 const titleFor = (slug: string) => titles[slug] ?? slug[0].toUpperCase() + slug.slice(1);
 
 const groups: { title: string; slugs: string[] }[] = [
-  { title: "Forms", slugs: ["button", "input", "textarea", "label", "checkbox", "switch", "select", "toggle-group"] },
+  { title: "Forms", slugs: ["button", "input", "textarea", "label", "checkbox", "radio-group", "switch", "select", "toggle-group"] },
   { title: "Data display", slugs: ["badge", "status-icon", "avatar", "kbd", "card", "table", "progress", "meter"] },
   { title: "Overlays", slugs: ["dialog", "command", "popover", "dropdown-menu", "tooltip"] },
   { title: "Layout & feedback", slugs: ["sidebar", "tabs", "separator", "skeleton"] },

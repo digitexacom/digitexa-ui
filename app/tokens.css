@@ -8,6 +8,7 @@
  *   <html data-theme="light|dark">         force a theme (default: follow the system)
  *   <html data-accent="ember|cobalt|…">    accent color (default: ember)
  *   <html data-density="compact">          tighter controls and rows
+ *   <html data-motion="reduce|full">       override the OS reduced-motion setting
  *
  * data-accent and data-density also work on any element, to restyle just that part of the page.
  * `npm run check:contrast` verifies every text/background pair below against WCAG.
@@ -69,19 +70,27 @@
   --dx-motion-slow: 260ms;
 }
 
-[data-density="compact"] {
+[data-density="compact"],
+/* sidebar-only density: <html data-sidebar-density="compact"> */
+[data-sidebar-density="compact"] [data-slot="sidebar"] {
   --dx-control-sm: 22px;
   --dx-control-md: 26px;
   --dx-control-lg: 32px;
   --dx-row-height: 32px;
 }
 
+/* follows the OS setting; data-motion="reduce" forces it, data-motion="full" opts out */
 @media (prefers-reduced-motion: reduce) {
-  :root {
+  :root:not([data-motion="full"]) {
     --dx-motion-fast: 0ms;
     --dx-motion: 0ms;
     --dx-motion-slow: 0ms;
   }
+}
+[data-motion="reduce"] {
+  --dx-motion-fast: 0ms;
+  --dx-motion: 0ms;
+  --dx-motion-slow: 0ms;
 }
 
 /* ---------------------------------------------------------- neutrals */

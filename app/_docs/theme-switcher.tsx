@@ -24,7 +24,7 @@ function store(key: string, value: string | null) {
 // Watch <html> attributes so the switcher stays in sync if other code changes them.
 function subscribe(onChange: () => void) {
   const observer = new MutationObserver(onChange);
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "data-accent", "data-density"] });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "data-accent", "data-density", "data-sidebar-density", "data-motion"] });
   return () => observer.disconnect();
 }
 

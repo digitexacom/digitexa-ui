@@ -88,6 +88,16 @@
       ]
     },
     {
+      "name": "radio-group",
+      "type": "component",
+      "description": "Radio buttons and selectable cards (RadioCard) for visual choices.",
+      "files": [
+        {
+          "src": "components/ui/radio-group.tsx"
+        }
+      ]
+    },
+    {
       "name": "select",
       "type": "component",
       "description": "Accessible single select with groups and labels.",

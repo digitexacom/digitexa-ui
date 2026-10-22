@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Example settings screen (`/examples/settings`): theme cards, accent, interface and sidebar density, motion,
+  workspace and profile forms, notification switches.
+- New components: `radio-group` (with `RadioCard`), `command` (⌘K palette).
+- `data-motion="reduce|full"` overrides the OS reduced-motion setting; `data-sidebar-density="compact"` tightens
+  only the sidebar.
+- Collapsible sidebar (icon rail, ⌘B, mobile drawer), workspace switcher, account menu and notifications in the
+  example app.
+
 ## 0.2.0
 
 - Tokens rewritten with `light-dark()` and prefixed `--dx-*`, so they don't collide with other kits.
