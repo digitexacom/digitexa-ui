@@ -3,24 +3,16 @@
 import * as React from "react";
 import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Tooltip } from "@/components/ui/tooltip";
 
-export const accents = [
-  { id: "ember", label: "Ember", swatch: "oklch(0.64 0.165 47)" },
-  { id: "cobalt", label: "Cobalt", swatch: "oklch(0.58 0.17 258)" },
-  { id: "moss", label: "Moss", swatch: "oklch(0.6 0.12 145)" },
-  { id: "plum", label: "Plum", swatch: "oklch(0.58 0.16 315)" },
-  { id: "rose", label: "Rose", swatch: "oklch(0.62 0.18 12)" },
-  { id: "graphite", label: "Graphite", swatch: "oklch(0.45 0.012 65)" },
-] as const;
+export const accents = ["ember", "cobalt", "moss", "plum", "rose", "graphite"] as const;
 
-type Theme = "system" | "light" | "dark";
-
-const themes: { id: Theme; label: string; icon: typeof SunIcon }[] = [
+const themes = [
   { id: "system", label: "System", icon: MonitorIcon },
   { id: "light", label: "Light", icon: SunIcon },
   { id: "dark", label: "Dark", icon: MoonIcon },
-];
+] as const;
 
 function store(key: string, value: string | null) {
   try {
@@ -32,73 +24,74 @@ function store(key: string, value: string | null) {
 // Watch <html> attributes so the switcher stays in sync if other code changes them.
 function subscribe(onChange: () => void) {
   const observer = new MutationObserver(onChange);
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "data-accent"] });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "data-accent", "data-density"] });
   return () => observer.disconnect();
 }
 
-function useHtmlAttr<T extends string>(name: string, fallback: T): T {
+function useHtmlAttr(name: string, fallback: string) {
   return React.useSyncExternalStore(
     subscribe,
-    () => (document.documentElement.getAttribute(name) as T | null) ?? fallback,
+    () => document.documentElement.getAttribute(name) ?? fallback,
     () => fallback,
   );
 }
 
+function setHtmlAttr(name: string, value: string | null, storageKey: string) {
+  const d = document.documentElement;
+  if (value === null) d.removeAttribute(name);
+  else d.setAttribute(name, value);
+  store(storageKey, value);
+}
+
 export function ThemeSwitcher() {
-  const theme = useHtmlAttr<Theme>("data-theme", "system");
+  const theme = useHtmlAttr("data-theme", "system");
   const accent = useHtmlAttr("data-accent", "ember");
-
-  function applyTheme(next: Theme) {
-    const d = document.documentElement;
-    if (next === "system") d.removeAttribute("data-theme");
-    else d.setAttribute("data-theme", next);
-    store("dx-theme", next === "system" ? null : next);
-  }
-
-  function applyAccent(next: string) {
-    document.documentElement.setAttribute("data-accent", next);
-    store("dx-accent", next);
-  }
+  const density = useHtmlAttr("data-density", "comfortable");
 
   return (
-    <div className="flex items-center gap-3">
-      <div role="radiogroup" aria-label="Accent color" className="flex items-center gap-1">
-        {accents.map((a) => (
-          <button
-            key={a.id}
-            role="radio"
-            aria-checked={accent === a.id}
-            title={a.label}
-            onClick={() => applyAccent(a.id)}
-            className={cn(
-              "grid size-5 place-items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              accent === a.id && "ring-2 ring-fg/80 ring-offset-2 ring-offset-bg",
-            )}
-          >
-            <span className="size-3.5 rounded-full" style={{ background: a.swatch }} />
-            <span className="sr-only">{a.label}</span>
-          </button>
+    <div className="flex items-center gap-2">
+      <ToggleGroup
+        type="single"
+        aria-label="Accent color"
+        value={accent}
+        onValueChange={(v) => v && setHtmlAttr("data-accent", v, "dx-accent")}
+        className="max-sm:hidden"
+      >
+        {accents.map((id) => (
+          <Tooltip key={id} content={id[0].toUpperCase() + id.slice(1)}>
+            <ToggleGroupItem value={id} aria-label={id} className="min-w-0 px-1">
+              {/* the swatch reads the real token by scoping data-accent to itself */}
+              <span data-accent={id} className="size-3 rounded-full bg-accent" />
+            </ToggleGroupItem>
+          </Tooltip>
         ))}
-      </div>
+      </ToggleGroup>
 
-      <div role="radiogroup" aria-label="Theme" className="flex h-7 items-center rounded-md border border-border bg-bg-subtle p-0.5">
+      <ToggleGroup
+        type="single"
+        aria-label="Density"
+        value={density}
+        onValueChange={(v) => v && setHtmlAttr("data-density", v === "compact" ? v : null, "dx-density")}
+        className="max-md:hidden"
+      >
+        <ToggleGroupItem value="comfortable">Default</ToggleGroupItem>
+        <ToggleGroupItem value="compact">Compact</ToggleGroupItem>
+      </ToggleGroup>
+
+      <ToggleGroup
+        type="single"
+        aria-label="Theme"
+        value={theme}
+        onValueChange={(v) => v && setHtmlAttr("data-theme", v === "system" ? null : v, "dx-theme")}
+      >
         {themes.map(({ id, label, icon: Icon }) => (
-          <button
-            key={id}
-            role="radio"
-            aria-checked={theme === id}
-            title={label}
-            onClick={() => applyTheme(id)}
-            className={cn(
-              "grid h-full w-7 place-items-center rounded-sm text-fg-subtle outline-none hover:text-fg focus-visible:ring-2 focus-visible:ring-ring",
-              theme === id && "bg-surface text-fg shadow-sm",
-            )}
-          >
-            <Icon className="size-3.5" />
-            <span className="sr-only">{label}</span>
-          </button>
+          <Tooltip key={id} content={label}>
+            <ToggleGroupItem value={id} aria-label={label} className="px-1.5">
+              <Icon />
+            </ToggleGroupItem>
+          </Tooltip>
         ))}
-      </div>
+      </ToggleGroup>
     </div>
   );
 }

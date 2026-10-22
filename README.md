@@ -2,67 +2,79 @@
 
 An open-source, copy-paste component kit for dense, warm desktop interfaces.
 
-Components aren't installed as a package — they're written into your project as files you own and edit.
+Components aren't installed as a package. They're written into your project as files you own and edit.
 Built on Next.js (App Router), Tailwind CSS v4, Radix primitives and `class-variance-authority`.
-The registry format and CLI are our own; there is no dependency on any other component tool.
+The registry format and the CLI are part of this repo; there's no dependency on any other component tool.
 
 ## Highlights
 
-- **Token-first theming** — warm neutral palette, light and dark defined separately (not inverted).
-- **Swappable accent** — `<html data-accent="ember | cobalt | moss | plum | rose | graphite">`.
-- **Dark mode** — follows the system, or force it with `<html data-theme="dark | light">`.
-- **Dense scale** — 13px base font, 24 / 30 / 36px controls, 4pt spacing.
-- **Work statuses built in** — `backlog`, `todo`, `progress`, `review`, `done`.
+- **Token-first theming.** Warm neutral palette, light and dark designed separately with `light-dark()`.
+  Every text/background pair is checked against WCAG in CI.
+- **Swappable accent.** `<html data-accent="ember | cobalt | moss | plum | rose | graphite">`, also per element.
+- **Dark mode.** Follows the system, or force it with `<html data-theme="dark | light">`.
+- **Dense scale.** 13px base font, 20 / 24 / 30 / 36px controls, 4pt spacing, and `data-density="compact"`.
+- **Work statuses built in.** `backlog`, `todo`, `progress`, `review`, `done`, as badges, icons and meters.
+- **No collisions.** All tokens are prefixed `--dx-*`, so the kit can live next to other design systems.
 
 ## Install into your project
 
-Requires a project with Tailwind CSS v4 and an `@/` import alias (or pass `--alias`).
+Requirements: Tailwind CSS v4, Node 20+, and an import alias such as `"@/*": ["./*"]` (or `["./src/*"]`) in `tsconfig.json`.
 
 ```bash
-curl -fsSL https://<site>/dx.mjs | node --input-type=module - add theme button dialog --registry https://<site>/r
+curl -fsSL https://<your-docs-site>/dx.mjs | node --input-type=module - add theme button dialog
 ```
 
-Then add the theme to `globals.css`, below `@import "tailwindcss";`:
+The first run detects your layout (including `src/`), writes `dx.json`, adds the theme imports to your global
+stylesheet, and installs the npm dependencies with your package manager.
 
-```css
-@import "./dx-tokens.css";
-@import "./dx-theme.css";
-```
+| Command | |
+|---|---|
+| `dx add <item...>` | Add items and everything they need |
+| `dx list` | List registry items |
+| `dx init` | Only detect the layout and write `dx.json` |
 
-CLI options: `--cwd <dir>`, `--overwrite`, `--no-install`, `--alias ~/`, `--registry <url|dir>`.
-`dx list` shows everything available.
+Options: `--cwd <dir>`, `--overwrite`, `--skip-install`, `--registry <url|dir>`, `-y`, `-h`.
+
+`dx.json` holds the paths (`ui`, `lib`, `styles`), your global stylesheet and the import aliases. Edit it if
+detection got something wrong.
 
 ## Components
 
-| Name | Description |
-|---|---|
-| `button` | 6 variants (primary, secondary, soft, ghost, danger, link), 5 sizes, `asChild` |
-| `input` | 3 sizes, error state via `aria-invalid` |
-| `badge` | Semantic + work status variants, `StatusBadge` |
-| `dialog` | Built on Radix Dialog; header / body / footer, 3 sizes |
+Forms: button, input, textarea, label, checkbox, switch, select, toggle-group ·
+Data display: badge, status-icon, avatar, kbd, card (+ stat), table, progress, meter ·
+Overlays: dialog, popover, dropdown-menu, tooltip ·
+Layout: sidebar (app shell), tabs, separator, skeleton
+
+The docs site has a page per component with a live preview and the exact source the CLI installs, plus a full
+example app at `/examples/overview`.
+
+## Browser support
+
+Current Chrome, Edge, Firefox and Safari. Tailwind's build turns `light-dark()` into a fallback, so older
+Safari versions work too.
 
 ## Development
 
 ```bash
 npm install
-npm run dev        # docs site → http://localhost:3000
-npm run registry   # registry/registry.json → public/r/*.json + public/dx.mjs
-npm run build      # registry + next build
+npm run dev            # docs at http://localhost:3000
+npm run check          # lint, typecheck, contrast check and build (what CI runs)
 ```
+
+To deploy the docs and registry, set `NEXT_PUBLIC_SITE_URL` and `SITE_URL` to the public URL before building, so
+the published CLI points at your registry.
 
 | Path | What |
 |---|---|
-| `app/tokens.css` | Token values: light, dark, accents |
-| `app/theme.css` | Tailwind v4 mapping (`bg-surface`, `text-fg-muted`, `bg-status-done` …) and the `dark:` variant |
+| `app/tokens.css` | Token values |
+| `app/theme.css` | Tailwind v4 mapping and base styles |
 | `components/ui/*` | Components |
-| `registry/registry.json` | Registry items: files, npm dependencies, `requires` (other items) |
+| `registry/registry.json` | Registry items; dependencies are derived from imports |
+| `scripts/build-registry.mjs` | Validates and builds `public/r/*.json` and `public/dx.mjs` |
+| `scripts/check-contrast.mjs` | WCAG check for every token pair |
 | `cli/dx.mjs` | Zero-dependency CLI |
 
-### Adding a component
-
-1. Write `components/ui/<name>.tsx` using the semantic tokens only (no raw colors).
-2. Add an item to `registry/registry.json`.
-3. Run `npm run registry` and add a demo to the docs site.
+See [CONTRIBUTING.md](CONTRIBUTING.md) to add a component.
 
 ## License
 

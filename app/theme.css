@@ -6,105 +6,127 @@
 
 @custom-variant dark {
   @media (prefers-color-scheme: dark) {
-    &:where(:root:not([data-theme="light"]) *) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
       @slot;
     }
   }
-  &:where([data-theme="dark"] *) {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
     @slot;
   }
 }
 
-/* Map tokens to Tailwind utilities: bg-surface, text-fg-muted, border-border ... */
 @theme inline {
   --font-sans: var(--font-geist-sans, ui-sans-serif), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono, ui-monospace), monospace;
 
-  --text-2xs: var(--font-size-2xs);
+  --text-2xs: var(--dx-font-size-2xs);
   --text-2xs--line-height: 14px;
-  --text-xs: var(--font-size-xs);
+  --text-xs: var(--dx-font-size-xs);
   --text-xs--line-height: 16px;
-  --text-sm: var(--font-size-sm);
+  --text-sm: var(--dx-font-size-sm);
   --text-sm--line-height: 18px;
-  --text-base: var(--font-size-base);
+  --text-base: var(--dx-font-size-base);
   --text-base--line-height: 19px;
-  --text-md: var(--font-size-md);
+  --text-md: var(--dx-font-size-md);
   --text-md--line-height: 20px;
-  --text-lg: var(--font-size-lg);
+  --text-lg: var(--dx-font-size-lg);
   --text-lg--line-height: 22px;
-  --text-xl: var(--font-size-xl);
+  --text-xl: var(--dx-font-size-xl);
   --text-xl--line-height: 26px;
-  --text-2xl: var(--font-size-2xl);
+  --text-2xl: var(--dx-font-size-2xl);
   --text-2xl--line-height: 30px;
+  --text-3xl: var(--dx-font-size-3xl);
+  --text-3xl--line-height: 36px;
 
-  --radius-sm: var(--radius-small);
-  --radius-md: var(--radius);
-  --radius-lg: var(--radius-large);
+  --radius-sm: var(--dx-radius-small);
+  --radius-md: var(--dx-radius);
+  --radius-lg: var(--dx-radius-large);
+  --radius-xl: var(--dx-radius-xlarge);
 
-  --shadow-sm: var(--elevation-1);
-  --shadow-md: var(--elevation-2);
-  --shadow-lg: var(--elevation-3);
+  --shadow-sm: var(--dx-elevation-1);
+  --shadow-md: var(--dx-elevation-2);
+  --shadow-lg: var(--dx-elevation-3);
 
-  --color-bg: var(--bg);
-  --color-bg-subtle: var(--bg-subtle);
-  --color-surface: var(--surface);
-  --color-surface-raised: var(--surface-raised);
-  --color-muted: var(--muted);
-  --color-muted-hover: var(--muted-hover);
-  --color-fg: var(--fg);
-  --color-fg-muted: var(--fg-muted);
-  --color-fg-subtle: var(--fg-subtle);
-  --color-fg-disabled: var(--fg-disabled);
-  --color-border: var(--border);
-  --color-border-strong: var(--border-strong);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-overlay: var(--overlay);
+  --ease-out: var(--dx-motion-ease);
 
-  --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
-  --color-accent-fg: var(--accent-fg);
-  --color-accent-subtle: var(--accent-subtle);
-  --color-accent-subtle-fg: var(--accent-subtle-fg);
+  /* neutrals */
+  --color-bg: var(--dx-bg);
+  --color-bg-subtle: var(--dx-bg-subtle);
+  --color-surface: var(--dx-surface);
+  --color-surface-raised: var(--dx-surface-raised);
+  --color-muted: var(--dx-muted);
+  --color-muted-hover: var(--dx-muted-hover);
+  --color-selected: var(--dx-selected);
+  --color-fg: var(--dx-fg);
+  --color-fg-muted: var(--dx-fg-muted);
+  --color-fg-subtle: var(--dx-fg-subtle);
+  --color-fg-disabled: var(--dx-fg-disabled);
+  --color-border: var(--dx-border);
+  --color-border-strong: var(--dx-border-strong);
+  --color-input: var(--dx-input);
+  --color-ring: var(--dx-ring);
+  --color-overlay: var(--dx-overlay);
 
-  --color-success: var(--success);
-  --color-success-subtle: var(--success-subtle);
-  --color-warning: var(--warning);
-  --color-warning-subtle: var(--warning-subtle);
-  --color-danger: var(--danger);
-  --color-danger-subtle: var(--danger-subtle);
-  --color-danger-fg: var(--danger-fg);
-  --color-info: var(--info);
-  --color-info-subtle: var(--info-subtle);
+  /* accent */
+  --color-accent: var(--dx-accent);
+  --color-accent-hover: var(--dx-accent-hover);
+  --color-accent-fg: var(--dx-accent-fg);
+  --color-accent-subtle: var(--dx-accent-subtle);
+  --color-accent-subtle-fg: var(--dx-accent-subtle-fg);
 
-  --color-status-backlog: var(--status-backlog);
-  --color-status-backlog-subtle: var(--status-backlog-subtle);
-  --color-status-todo: var(--status-todo);
-  --color-status-todo-subtle: var(--status-todo-subtle);
-  --color-status-progress: var(--status-progress);
-  --color-status-progress-subtle: var(--status-progress-subtle);
-  --color-status-review: var(--status-review);
-  --color-status-review-subtle: var(--status-review-subtle);
-  --color-status-done: var(--status-done);
-  --color-status-done-subtle: var(--status-done-subtle);
+  /* semantic */
+  --color-success: var(--dx-success);
+  --color-success-subtle: var(--dx-success-subtle);
+  --color-success-fg: var(--dx-success-fg);
+  --color-warning: var(--dx-warning);
+  --color-warning-subtle: var(--dx-warning-subtle);
+  --color-warning-fg: var(--dx-warning-fg);
+  --color-danger: var(--dx-danger);
+  --color-danger-hover: var(--dx-danger-hover);
+  --color-danger-subtle: var(--dx-danger-subtle);
+  --color-danger-fg: var(--dx-danger-fg);
+  --color-danger-fg-subtle: var(--dx-danger-fg-subtle);
+  --color-info: var(--dx-info);
+  --color-info-subtle: var(--dx-info-subtle);
+  --color-info-fg: var(--dx-info-fg);
 
-  --ease-out: var(--motion-ease);
+  /* work statuses */
+  --color-status-backlog: var(--dx-status-backlog);
+  --color-status-backlog-subtle: var(--dx-status-backlog-subtle);
+  --color-status-backlog-fg: var(--dx-status-backlog-fg);
+  --color-status-todo: var(--dx-status-todo);
+  --color-status-todo-subtle: var(--dx-status-todo-subtle);
+  --color-status-todo-fg: var(--dx-status-todo-fg);
+  --color-status-progress: var(--dx-status-progress);
+  --color-status-progress-subtle: var(--dx-status-progress-subtle);
+  --color-status-progress-fg: var(--dx-status-progress-fg);
+  --color-status-review: var(--dx-status-review);
+  --color-status-review-subtle: var(--dx-status-review-subtle);
+  --color-status-review-fg: var(--dx-status-review-fg);
+  --color-status-done: var(--dx-status-done);
+  --color-status-done-subtle: var(--dx-status-done-subtle);
+  --color-status-done-fg: var(--dx-status-done-fg);
 }
 
 @layer base {
   *,
   ::before,
   ::after {
-    border-color: var(--border);
+    border-color: var(--dx-border);
   }
   body {
-    background: var(--bg);
-    color: var(--fg);
+    background: var(--dx-bg);
+    color: var(--dx-fg);
     font-family: var(--font-sans);
-    font-size: var(--font-size-base);
+    font-size: var(--dx-font-size-base);
     line-height: 19px;
     -webkit-font-smoothing: antialiased;
-    font-feature-settings: "cv11", "ss01";
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  :focus-visible {
+    outline: 2px solid var(--dx-ring);
+    outline-offset: 2px;
   }
   /* Tailwind v4 gives buttons cursor: default; anything clickable should get a pointer. */
   button,
@@ -115,6 +137,8 @@
   [role="tab"],
   [role="option"],
   [role="menuitem"],
+  [role="menuitemcheckbox"],
+  [role="menuitemradio"],
   a[href],
   label[for],
   select,
@@ -136,18 +160,56 @@
     cursor: not-allowed;
   }
   ::selection {
-    background: var(--accent-subtle);
-    color: var(--fg);
+    background: var(--dx-accent-subtle);
+    color: var(--dx-fg);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--dx-border-strong) transparent;
   }
 }
 
 @keyframes dx-fade-in { from { opacity: 0 } to { opacity: 1 } }
 @keyframes dx-fade-out { from { opacity: 1 } to { opacity: 0 } }
+/* Dialogs are centred with the `translate` property; these animate `scale` only so the two never stack. */
 @keyframes dx-pop-in {
-  from { opacity: 0; transform: translate(-50%, -48%) scale(0.97) }
-  to { opacity: 1; transform: translate(-50%, -50%) scale(1) }
+  from { opacity: 0; scale: 0.96 }
+  to { opacity: 1; scale: 1 }
 }
 @keyframes dx-pop-out {
-  from { opacity: 1; transform: translate(-50%, -50%) scale(1) }
-  to { opacity: 0; transform: translate(-50%, -48%) scale(0.97) }
+  from { opacity: 1; scale: 1 }
+  to { opacity: 0; scale: 0.96 }
+}
+/* floating content (menus, popovers, tooltips, selects) */
+@keyframes dx-float-in {
+  from { opacity: 0; translate: 0 var(--dx-float-y, 2px); scale: 0.98 }
+  to { opacity: 1; translate: 0 0; scale: 1 }
+}
+@keyframes dx-float-out {
+  from { opacity: 1 }
+  to { opacity: 0; scale: 0.98 }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+@keyframes dx-shimmer {
+  from { background-position: 150% 0 }
+  to { background-position: -50% 0 }
+}
+
+/* Shared floating-panel motion. Usage: className="dx-float" on Radix *Content. */
+@utility dx-float {
+  transform-origin: var(--radix-popper-transform-origin, center);
+  &[data-side="top"] { --dx-float-y: -2px; }
+  &[data-state="open"], &[data-state="delayed-open"], &[data-state="instant-open"] {
+    animation: dx-float-in var(--dx-motion) var(--dx-motion-ease);
+  }
+  &[data-state="closed"] {
+    animation: dx-float-out var(--dx-motion-fast) ease-in;
+  }
 }

@@ -1,55 +1,271 @@
 {
-  "$comment": "Digitexa UI registry. `npm run registry` compiles this into public/r/*.json.",
+  "$comment": "Digitexa UI registry. `npm run registry` compiles this into public/r/*.json. npm dependencies and `requires` are derived from each file's imports; list extra `requires` here only for things imports can't show.",
   "name": "digitexa-ui",
   "items": [
     {
-      "name": "utils",
-      "type": "lib",
-      "description": "cn() — clsx + tailwind-merge, aware of the kit's font scale.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": [{ "src": "lib/utils.ts", "target": "lib/utils.ts" }]
-    },
-    {
       "name": "theme",
       "type": "style",
-      "description": "Tokens (light/dark/accents) and the Tailwind v4 mapping. Add two @imports to globals.css.",
+      "description": "Tokens (light/dark, 6 accents, density) and the Tailwind v4 mapping.",
       "files": [
-        { "src": "app/tokens.css", "target": "app/dx-tokens.css" },
-        { "src": "app/theme.css", "target": "app/dx-theme.css" }
-      ],
-      "notes": "In globals.css, below `@import \"tailwindcss\";`, add:\n  @import \"./dx-tokens.css\";\n  @import \"./dx-theme.css\";"
+        {
+          "src": "app/tokens.css",
+          "target": "styles/dx-tokens.css"
+        },
+        {
+          "src": "app/theme.css",
+          "target": "styles/dx-theme.css"
+        }
+      ]
+    },
+    {
+      "name": "utils",
+      "type": "lib",
+      "description": "cn(): clsx + tailwind-merge, aware of the kit's font scale.",
+      "files": [
+        {
+          "src": "lib/utils.ts"
+        }
+      ]
     },
     {
       "name": "button",
       "type": "component",
-      "description": "6 variants (primary, secondary, soft, ghost, danger, link), 5 sizes, asChild.",
-      "dependencies": ["@radix-ui/react-slot", "class-variance-authority"],
-      "requires": ["utils", "theme"],
-      "files": [{ "src": "components/ui/button.tsx", "target": "components/ui/button.tsx" }]
+      "description": "6 variants, 6 sizes, asChild, never submits by accident.",
+      "files": [
+        {
+          "src": "components/ui/button.tsx"
+        }
+      ]
     },
     {
       "name": "input",
       "type": "component",
       "description": "3 sizes, error state via aria-invalid.",
-      "dependencies": ["class-variance-authority"],
-      "requires": ["utils", "theme"],
-      "files": [{ "src": "components/ui/input.tsx", "target": "components/ui/input.tsx" }]
+      "files": [
+        {
+          "src": "components/ui/input.tsx"
+        }
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "component",
+      "description": "Grows with its content.",
+      "files": [
+        {
+          "src": "components/ui/textarea.tsx"
+        }
+      ]
+    },
+    {
+      "name": "label",
+      "type": "component",
+      "description": "Form label that dims with a disabled peer.",
+      "files": [
+        {
+          "src": "components/ui/label.tsx"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "component",
+      "description": "Checked, unchecked and indeterminate.",
+      "files": [
+        {
+          "src": "components/ui/checkbox.tsx"
+        }
+      ]
+    },
+    {
+      "name": "switch",
+      "type": "component",
+      "description": "On/off toggle.",
+      "files": [
+        {
+          "src": "components/ui/switch.tsx"
+        }
+      ]
+    },
+    {
+      "name": "select",
+      "type": "component",
+      "description": "Accessible single select with groups and labels.",
+      "files": [
+        {
+          "src": "components/ui/select.tsx"
+        }
+      ]
+    },
+    {
+      "name": "toggle-group",
+      "type": "component",
+      "description": "Segmented control with arrow-key navigation.",
+      "files": [
+        {
+          "src": "components/ui/toggle-group.tsx"
+        }
+      ]
+    },
+    {
+      "name": "tabs",
+      "type": "component",
+      "description": "Segmented or underline tabs.",
+      "files": [
+        {
+          "src": "components/ui/tabs.tsx"
+        }
+      ]
     },
     {
       "name": "badge",
       "type": "component",
-      "description": "Semantic + work status variants (backlog/todo/progress/review/done), StatusBadge.",
-      "dependencies": ["class-variance-authority"],
-      "requires": ["utils", "theme"],
-      "files": [{ "src": "components/ui/badge.tsx", "target": "components/ui/badge.tsx" }]
+      "description": "Semantic and work status variants, StatusBadge.",
+      "files": [
+        {
+          "src": "components/ui/badge.tsx"
+        }
+      ]
+    },
+    {
+      "name": "status-icon",
+      "type": "component",
+      "description": "Status glyphs that show progress: backlog, to do, in progress, review, done.",
+      "files": [
+        {
+          "src": "components/ui/status-icon.tsx"
+        }
+      ]
+    },
+    {
+      "name": "avatar",
+      "type": "component",
+      "description": "Image with initials fallback, stable tint per name, AvatarGroup.",
+      "files": [
+        {
+          "src": "components/ui/avatar.tsx"
+        }
+      ]
+    },
+    {
+      "name": "kbd",
+      "type": "component",
+      "description": "Keyboard shortcut hint.",
+      "files": [
+        {
+          "src": "components/ui/kbd.tsx"
+        }
+      ]
+    },
+    {
+      "name": "card",
+      "type": "component",
+      "description": "Card with header/content/footer, plus StatGroup and Stat for key numbers.",
+      "files": [
+        {
+          "src": "components/ui/card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "table",
+      "type": "component",
+      "description": "Dense data table with density-aware rows.",
+      "files": [
+        {
+          "src": "components/ui/table.tsx"
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "type": "component",
+      "description": "Thin progress bar with tones.",
+      "files": [
+        {
+          "src": "components/ui/progress.tsx"
+        }
+      ]
+    },
+    {
+      "name": "meter",
+      "type": "component",
+      "description": "Stacked distribution bar for status breakdowns and workload.",
+      "files": [
+        {
+          "src": "components/ui/meter.tsx"
+        }
+      ]
+    },
+    {
+      "name": "separator",
+      "type": "component",
+      "description": "Horizontal or vertical rule.",
+      "files": [
+        {
+          "src": "components/ui/separator.tsx"
+        }
+      ]
+    },
+    {
+      "name": "skeleton",
+      "type": "component",
+      "description": "Loading placeholder with a shimmer.",
+      "files": [
+        {
+          "src": "components/ui/skeleton.tsx"
+        }
+      ]
+    },
+    {
+      "name": "tooltip",
+      "type": "component",
+      "description": "Tooltip with a one-line shorthand.",
+      "files": [
+        {
+          "src": "components/ui/tooltip.tsx"
+        }
+      ]
+    },
+    {
+      "name": "popover",
+      "type": "component",
+      "description": "Floating panel anchored to a trigger.",
+      "files": [
+        {
+          "src": "components/ui/popover.tsx"
+        }
+      ]
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "component",
+      "description": "Menu with items, checkboxes, radios, shortcuts and submenus.",
+      "files": [
+        {
+          "src": "components/ui/dropdown-menu.tsx"
+        }
+      ]
+    },
+    {
+      "name": "sidebar",
+      "type": "component",
+      "description": "App frame: AppShell, Sidebar with groups and items, Topbar.",
+      "files": [
+        {
+          "src": "components/ui/sidebar.tsx"
+        }
+      ]
     },
     {
       "name": "dialog",
       "type": "component",
-      "description": "Built on Radix Dialog; header/body/footer, 3 sizes.",
-      "dependencies": ["@radix-ui/react-dialog", "lucide-react"],
-      "requires": ["utils", "theme"],
-      "files": [{ "src": "components/ui/dialog.tsx", "target": "components/ui/dialog.tsx" }]
+      "description": "Modal with header/body/footer, 3 sizes, scrolls when tall.",
+      "files": [
+        {
+          "src": "components/ui/dialog.tsx"
+        }
+      ]
     }
   ]
 }

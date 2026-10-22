@@ -7,7 +7,7 @@ const inputVariants = cva(
   [
     "flex w-full min-w-0 rounded-md border border-input bg-surface text-fg shadow-sm",
     "placeholder:text-fg-subtle",
-    "transition-[border-color,box-shadow] duration-[var(--motion-fast)] ease-out",
+    "transition-[border-color,box-shadow] duration-(--dx-motion-fast) ease-out",
     "outline-none hover:border-border-strong focus-visible:border-accent focus-visible:ring-3 focus-visible:ring-accent/20",
     "aria-invalid:border-danger aria-invalid:focus-visible:ring-danger/20",
     "disabled:cursor-not-allowed disabled:bg-muted disabled:text-fg-disabled",
@@ -16,9 +16,9 @@ const inputVariants = cva(
   {
     variants: {
       size: {
-        sm: "h-6 px-2 text-xs",
-        md: "h-7.5 px-2.5 text-base",
-        lg: "h-9 px-3 text-md",
+        sm: "h-(--dx-control-sm) px-2 text-xs",
+        md: "h-(--dx-control-md) px-2.5 text-base",
+        lg: "h-(--dx-control-lg) px-3 text-md",
       },
     },
     defaultVariants: { size: "md" },

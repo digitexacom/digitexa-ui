@@ -16,9 +16,9 @@ function DialogOverlay({ className, ...props }: React.ComponentProps<typeof Dial
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 z-50 bg-overlay",
-        "data-[state=open]:animate-[dx-fade-in_var(--motion)_var(--motion-ease)]",
-        "data-[state=closed]:animate-[dx-fade-out_var(--motion-fast)_ease-in]",
+        "fixed inset-0 z-(--dx-z-overlay) bg-overlay",
+        "data-[state=open]:animate-[dx-fade-in_var(--dx-motion)_var(--dx-motion-ease)]",
+        "data-[state=closed]:animate-[dx-fade-out_var(--dx-motion-fast)_ease-in]",
         className,
       )}
       {...props}
@@ -40,10 +40,10 @@ function DialogContent({ className, children, size = "md", hideClose = false, ..
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 flex w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 flex-col",
+          "fixed top-1/2 left-1/2 z-(--dx-z-overlay) flex max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 flex-col",
           "rounded-lg border border-border bg-surface-raised text-fg shadow-lg outline-none",
-          "data-[state=open]:animate-[dx-pop-in_var(--motion)_var(--motion-ease)]",
-          "data-[state=closed]:animate-[dx-pop-out_var(--motion-fast)_ease-in]",
+          "data-[state=open]:animate-[dx-pop-in_var(--dx-motion)_var(--dx-motion-ease)]",
+          "data-[state=closed]:animate-[dx-pop-out_var(--dx-motion-fast)_ease-in]",
           contentSizes[size],
           className,
         )}
@@ -54,7 +54,7 @@ function DialogContent({ className, children, size = "md", hideClose = false, ..
           <DialogPrimitive.Close
             className={cn(
               "absolute top-2.5 right-2.5 grid size-6 place-items-center rounded-sm text-fg-subtle",
-              "outline-none hover:bg-muted hover:text-fg focus-visible:ring-2 focus-visible:ring-ring",
+              "hover:bg-muted hover:text-fg",
             )}
           >
             <XIcon className="size-3.5" />
@@ -67,18 +67,18 @@ function DialogContent({ className, children, size = "md", hideClose = false, ..
 }
 
 function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="dialog-header" className={cn("flex flex-col gap-1 px-4 pt-4 pb-3 pr-10", className)} {...props} />;
+  return <div data-slot="dialog-header" className={cn("flex shrink-0 flex-col gap-1 px-4 pt-4 pb-3 pr-10", className)} {...props} />;
 }
 
 function DialogBody({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="dialog-body" className={cn("flex flex-col gap-3 px-4 pb-4", className)} {...props} />;
+  return <div data-slot="dialog-body" className={cn("flex min-h-0 flex-col gap-3 overflow-y-auto px-4 pb-4", className)} {...props} />;
 }
 
 function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="dialog-footer"
-      className={cn("flex items-center justify-end gap-2 border-t border-border bg-bg-subtle px-4 py-2.5 rounded-b-lg", className)}
+      className={cn("flex shrink-0 items-center justify-end gap-2 border-t border-border bg-bg-subtle rounded-b-[calc(var(--dx-radius-large)-1px)] px-4 py-2.5", className)}
       {...props}
     />
   );

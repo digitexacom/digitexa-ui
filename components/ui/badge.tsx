@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
   [
-    "inline-flex h-5 shrink-0 items-center gap-1 whitespace-nowrap rounded-sm px-1.5 text-xs font-medium",
+    "inline-flex h-(--dx-control-xs) shrink-0 items-center gap-1 whitespace-nowrap rounded-sm px-1.5 text-xs font-medium",
     "[&_svg]:size-3 [&_svg]:shrink-0",
   ],
   {
@@ -14,16 +14,16 @@ const badgeVariants = cva(
         neutral: "bg-muted text-fg-muted",
         outline: "border border-border text-fg-muted",
         accent: "bg-accent-subtle text-accent-subtle-fg",
-        success: "bg-success-subtle text-success",
-        warning: "bg-warning-subtle text-warning",
-        danger: "bg-danger-subtle text-danger",
-        info: "bg-info-subtle text-info",
+        success: "bg-success-subtle text-success-fg",
+        warning: "bg-warning-subtle text-warning-fg",
+        danger: "bg-danger-subtle text-danger-fg-subtle",
+        info: "bg-info-subtle text-info-fg",
         // work statuses
-        backlog: "bg-status-backlog-subtle text-status-backlog",
-        todo: "bg-status-todo-subtle text-status-todo",
-        progress: "bg-status-progress-subtle text-status-progress",
-        review: "bg-status-review-subtle text-status-review",
-        done: "bg-status-done-subtle text-status-done",
+        backlog: "bg-status-backlog-subtle text-status-backlog-fg",
+        todo: "bg-status-todo-subtle text-status-todo-fg",
+        progress: "bg-status-progress-subtle text-status-progress-fg",
+        review: "bg-status-review-subtle text-status-review-fg",
+        done: "bg-status-done-subtle text-status-done-fg",
       },
     },
     defaultVariants: { variant: "neutral" },
@@ -40,6 +40,19 @@ const statusLabels = {
 
 type Status = keyof typeof statusLabels;
 
+const dotColors: Partial<Record<NonNullable<VariantProps<typeof badgeVariants>["variant"]>, string>> = {
+  accent: "bg-accent",
+  success: "bg-success",
+  warning: "bg-warning",
+  danger: "bg-danger",
+  info: "bg-info",
+  backlog: "bg-status-backlog",
+  todo: "bg-status-todo",
+  progress: "bg-status-progress",
+  review: "bg-status-review",
+  done: "bg-status-done",
+};
+
 type BadgeProps = React.ComponentProps<"span"> &
   VariantProps<typeof badgeVariants> & {
     /** Adds a small colored dot on the left. */
@@ -49,7 +62,7 @@ type BadgeProps = React.ComponentProps<"span"> &
 function Badge({ className, variant, dot = false, children, ...props }: BadgeProps) {
   return (
     <span data-slot="badge" className={cn(badgeVariants({ variant }), className)} {...props}>
-      {dot && <span aria-hidden className="size-1.5 rounded-full bg-current" />}
+      {dot && <span aria-hidden className={cn("size-1.5 rounded-full", dotColors[variant ?? "neutral"] ?? "bg-current")} />}
       {children}
     </span>
   );
