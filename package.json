@@ -72,5 +72,13 @@
   ],
   "engines": {
     "node": ">=20.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/digitexacom/digitexa-ui.git"
+  },
+  "homepage": "https://digitexa-ui.vercel.app",
+  "bugs": {
+    "url": "https://github.com/digitexacom/digitexa-ui/issues"
   }
 }
