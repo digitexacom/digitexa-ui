@@ -11,6 +11,7 @@ const guides = [
   { href: "/", title: "Introduction" },
   { href: "/#installation", title: "Installation" },
   { href: "/#tokens", title: "Tokens" },
+  { href: "/docs/ai", title: "For AI agents" },
 ];
 const examples = [
   { href: "/examples/overview", title: "Workspace overview" },

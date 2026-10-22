@@ -205,6 +205,26 @@
   animation-iteration-count: 1 !important;
   transition-duration: 1ms !important;
 }
+/* a spinner that stops means "stuck": keep it turning, slowly, even with reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion="full"]) [data-slot="spinner"] {
+    animation-duration: 1.5s !important;
+    animation-iteration-count: infinite !important;
+  }
+}
+[data-motion="reduce"] [data-slot="spinner"] {
+  animation-duration: 1.5s !important;
+  animation-iteration-count: infinite !important;
+}
+/* accordion + collapsible height; --dx-collapse-height points at the Radix content-height variable */
+@keyframes dx-collapse-down {
+  from { height: 0; opacity: 0 }
+  to { height: var(--dx-collapse-height); opacity: 1 }
+}
+@keyframes dx-collapse-up {
+  from { height: var(--dx-collapse-height); opacity: 1 }
+  to { height: 0; opacity: 0 }
+}
 @keyframes dx-shimmer {
   from { background-position: 150% 0 }
   to { background-position: -50% 0 }

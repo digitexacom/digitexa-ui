@@ -40,15 +40,24 @@ function initials(name: string) {
   return ((parts[0]?.[0] ?? "") + (parts.length > 1 ? parts[parts.length - 1][0] : "")).toUpperCase();
 }
 
+const presence = {
+  online: { label: "Online", className: "bg-success" },
+  away: { label: "Away", className: "bg-warning" },
+  busy: { label: "Busy", className: "bg-danger" },
+  offline: { label: "Offline", className: "bg-fg-subtle" },
+} as const;
+
 type AvatarProps = React.ComponentProps<typeof AvatarPrimitive.Root> &
   VariantProps<typeof avatarVariants> & {
     name: string;
     src?: string;
+    /** Presence dot in the bottom-right corner. */
+    status?: keyof typeof presence;
   };
 
-function Avatar({ name, src, size, className, ...props }: AvatarProps) {
-  return (
-    <AvatarPrimitive.Root data-slot="avatar" className={cn(avatarVariants({ size }), className)} {...props}>
+function Avatar({ name, src, size, status, className, ...props }: AvatarProps) {
+  const avatar = (
+    <AvatarPrimitive.Root data-slot="avatar" className={cn(avatarVariants({ size }), !status && className)} {...props}>
       {src && <AvatarPrimitive.Image src={src} alt={name} className="size-full object-cover" />}
       <AvatarPrimitive.Fallback
         // undefined (not 0) renders the initials on the server too; with an image, wait briefly before showing them
@@ -59,6 +68,17 @@ function Avatar({ name, src, size, className, ...props }: AvatarProps) {
         {initials(name)}
       </AvatarPrimitive.Fallback>
     </AvatarPrimitive.Root>
+  );
+  if (!status) return avatar;
+  return (
+    <span data-slot="avatar-with-status" className={cn("relative inline-flex shrink-0", className)}>
+      {avatar}
+      <span
+        role="img"
+        aria-label={presence[status].label}
+        className={cn("absolute -right-px -bottom-px size-[30%] min-w-1.5 min-h-1.5 rounded-full ring-2 ring-surface", presence[status].className)}
+      />
+    </span>
   );
 }
 

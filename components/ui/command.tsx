@@ -193,7 +193,7 @@ function CommandItem({ onSelect, keywords = [], disabled, className, children, .
       className={cn(
         "flex h-(--dx-control-lg) cursor-pointer items-center gap-2.5 rounded-sm px-2 text-base select-none",
         "aria-selected:bg-muted aria-disabled:pointer-events-none aria-disabled:text-fg-disabled",
-        "[&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-fg-subtle",
+        "[&_svg]:size-4 [&_svg]:shrink-0 [&_svg:not([class*=text-])]:text-fg-subtle",
         className,
       )}
       {...props}

@@ -149,10 +149,7 @@ export function UserMenu() {
           aria-label="Account menu"
           className="flex h-9 items-center gap-2 rounded-md px-2 text-left outline-none hover:bg-muted data-[state=open]:bg-muted md:in-data-[sidebar=collapsed]:justify-center md:in-data-[sidebar=collapsed]:px-0"
         >
-          <span className="relative shrink-0">
-            <Avatar name="Mira Okafor" size="sm" />
-            <span className="absolute -right-0.5 -bottom-0.5 size-2 rounded-full bg-success ring-2 ring-bg-subtle" />
-          </span>
+          <Avatar name="Mira Okafor" size="sm" status="online" className="[&>[role=img]]:ring-bg-subtle" />
           <span className={`min-w-0 flex-1 truncate font-medium ${rail}`}>Mira Okafor</span>
           <ChevronsUpDownIcon className={`size-3.5 shrink-0 text-fg-subtle ${rail}`} />
         </button>

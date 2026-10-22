@@ -15,7 +15,7 @@ const rebuild = () => {
   clearTimeout(timer);
   timer = setTimeout(build, 150);
 };
-for (const dir of ["components/ui", "lib", "registry", "cli"]) watch(join(root, dir), rebuild);
+for (const dir of ["components/ui", "lib", "registry", "cli", "app/_docs/demos"]) watch(join(root, dir), rebuild);
 for (const file of ["app/tokens.css", "app/theme.css", "package.json"]) watch(join(root, file), rebuild);
 
 const next = spawn("npx", ["next", "dev", ...process.argv.slice(2)], { cwd: root, stdio: "inherit", shell: process.platform === "win32" });

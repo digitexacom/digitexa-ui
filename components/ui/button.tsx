@@ -2,6 +2,7 @@ import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
@@ -47,18 +48,33 @@ type ButtonProps = React.ComponentProps<"button"> &
      * set `aria-disabled` on them instead.
      */
     asChild?: boolean;
+    /** Shows a spinner in place of the first icon and blocks clicks; the label stays so the width doesn't jump. */
+    loading?: boolean;
   };
 
-function Button({ className, variant, size, asChild = false, type, ...props }: ButtonProps) {
+function Button({ className, variant, size, asChild = false, loading = false, type, disabled, children, ...props }: ButtonProps) {
   const Comp = asChild ? Slot : "button";
   return (
     <Comp
       data-slot="button"
       // never submit a surrounding form by accident
       type={asChild ? type : (type ?? "button")}
-      className={cn(buttonVariants({ variant, size }), className)}
+      disabled={asChild ? undefined : disabled || loading}
+      aria-disabled={asChild && (disabled || loading) ? true : undefined}
+      aria-busy={loading || undefined}
+      data-loading={loading || undefined}
+      className={cn(buttonVariants({ variant, size }), loading && "[&>[data-slot=spinner]+svg]:hidden", className)}
       {...props}
-    />
+    >
+      {asChild ? (
+        children
+      ) : (
+        <>
+          {loading && <Spinner size="sm" aria-hidden className="size-3.5" />}
+          {children}
+        </>
+      )}
+    </Comp>
   );
 }
 

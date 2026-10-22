@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
@@ -33,7 +34,18 @@ async function readRegistryItem(slug: string) {
   };
 }
 
-export default async function ComponentPage({ params }: PageProps<"/components/[slug]">) {
+export default function ComponentPage({ params }: PageProps<"/components/[slug]">) {
+  // the shell renders instantly; the page body streams in once params resolve
+  return (
+    <DocsShell>
+      <Suspense fallback={<div className="h-96" />}>
+        <ComponentDoc params={params} />
+      </Suspense>
+    </DocsShell>
+  );
+}
+
+async function ComponentDoc({ params }: { params: PageProps<"/components/[slug]">["params"] }) {
   const { slug } = await params;
   const index = allComponents.findIndex((c) => c.slug === slug);
   if (index === -1) notFound();
@@ -43,10 +55,13 @@ export default async function ComponentPage({ params }: PageProps<"/components/[
   const next = allComponents[index + 1];
 
   return (
-    <DocsShell>
+    <>
       <div className="max-w-2xl">
         <h1 className="text-2xl font-semibold tracking-tight">{item.title}</h1>
         <p className="mt-1 text-md text-fg-muted">{item.description}</p>
+        <a href={`/r/${slug}.md`} className="mt-2 inline-block text-sm text-fg-subtle hover:text-fg">
+          View as Markdown for AI →
+        </a>
       </div>
 
       <Section id="preview" title="Preview">
@@ -110,6 +125,6 @@ export default async function ComponentPage({ params }: PageProps<"/components/[
           </Link>
         )}
       </nav>
-    </DocsShell>
+    </>
   );
 }

@@ -28,6 +28,16 @@
       ]
     },
     {
+      "name": "use-now",
+      "type": "lib",
+      "description": "useNow(): a client-only clock (null on the server) for prerender-safe dates.",
+      "files": [
+        {
+          "src": "lib/use-now.ts"
+        }
+      ]
+    },
+    {
       "name": "button",
       "type": "component",
       "description": "6 variants, 6 sizes, asChild, never submits by accident.",
@@ -284,6 +294,276 @@
       "files": [
         {
           "src": "components/ui/dialog.tsx"
+        }
+      ]
+    },
+    {
+      "name": "slider",
+      "type": "component",
+      "description": "Radix slider with one or two thumbs for single values and ranges, labelled per thumb.",
+      "files": [
+        {
+          "src": "components/ui/slider.tsx"
+        }
+      ]
+    },
+    {
+      "name": "toggle",
+      "type": "component",
+      "description": "Two-state pressable button with default and outline variants, sized like Button.",
+      "files": [
+        {
+          "src": "components/ui/toggle.tsx"
+        }
+      ]
+    },
+    {
+      "name": "field",
+      "type": "component",
+      "description": "Form field layout that wires label, description and error ids to the control.",
+      "files": [
+        {
+          "src": "components/ui/field.tsx"
+        }
+      ]
+    },
+    {
+      "name": "input-group",
+      "type": "component",
+      "description": "Input with leading or trailing icons and text addons in one focus-ringed box.",
+      "files": [
+        {
+          "src": "components/ui/input-group.tsx"
+        }
+      ]
+    },
+    {
+      "name": "calendar",
+      "type": "component",
+      "description": "Dependency-free month calendar with single or range selection and full keyboard nav.",
+      "files": [
+        {
+          "src": "components/ui/calendar.tsx"
+        }
+      ]
+    },
+    {
+      "name": "date-picker",
+      "type": "component",
+      "description": "Input-styled trigger that opens a calendar popover; single date and range pickers.",
+      "files": [
+        {
+          "src": "components/ui/date-picker.tsx"
+        }
+      ]
+    },
+    {
+      "name": "combobox",
+      "type": "component",
+      "description": "Searchable select on Popover and Command, single or multiple with badge chips.",
+      "files": [
+        {
+          "src": "components/ui/combobox.tsx"
+        }
+      ]
+    },
+    {
+      "name": "alert",
+      "type": "component",
+      "description": "Inline callout in info, success, warning, danger and neutral, with icon, action and dismiss.",
+      "files": [
+        {
+          "src": "components/ui/alert.tsx"
+        }
+      ]
+    },
+    {
+      "name": "alert-dialog",
+      "type": "component",
+      "description": "Confirmation dialog that needs an explicit choice, with a danger action option.",
+      "files": [
+        {
+          "src": "components/ui/alert-dialog.tsx"
+        }
+      ]
+    },
+    {
+      "name": "sheet",
+      "type": "component",
+      "description": "Side panel built on Dialog that slides in from any edge, in four sizes.",
+      "files": [
+        {
+          "src": "components/ui/sheet.tsx"
+        }
+      ]
+    },
+    {
+      "name": "toast",
+      "type": "component",
+      "description": "Dependency-free toasts: call toast(), mount one Toaster; stacks, pauses on hover, promises.",
+      "files": [
+        {
+          "src": "components/ui/toast.tsx"
+        }
+      ]
+    },
+    {
+      "name": "spinner",
+      "type": "component",
+      "description": "Accessible loading spinner in five sizes that takes the current text color.",
+      "files": [
+        {
+          "src": "components/ui/spinner.tsx"
+        }
+      ]
+    },
+    {
+      "name": "empty-state",
+      "type": "component",
+      "description": "Placeholder for empty views with icon, title, description and actions; dashed variant.",
+      "files": [
+        {
+          "src": "components/ui/empty-state.tsx"
+        }
+      ]
+    },
+    {
+      "name": "hover-card",
+      "type": "component",
+      "description": "Popover-styled preview card that opens on hover or focus.",
+      "files": [
+        {
+          "src": "components/ui/hover-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "context-menu",
+      "type": "component",
+      "description": "Right-click menu with the same API and styles as DropdownMenu.",
+      "files": [
+        {
+          "src": "components/ui/context-menu.tsx"
+        }
+      ]
+    },
+    {
+      "name": "accordion",
+      "type": "component",
+      "description": "Single or multiple disclosure sections, plain or card style, animated height and chevron.",
+      "files": [
+        {
+          "src": "components/ui/accordion.tsx"
+        }
+      ]
+    },
+    {
+      "name": "collapsible",
+      "type": "component",
+      "description": "Radix Collapsible with a styled chevron trigger and animated content height.",
+      "files": [
+        {
+          "src": "components/ui/collapsible.tsx"
+        }
+      ]
+    },
+    {
+      "name": "breadcrumb",
+      "type": "component",
+      "description": "Accessible breadcrumb trail: asChild router links, current page, separators, ellipsis.",
+      "files": [
+        {
+          "src": "components/ui/breadcrumb.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pagination",
+      "type": "component",
+      "description": "Page links with ellipses, usePagination hook, ready-made controls and compact status.",
+      "files": [
+        {
+          "src": "components/ui/pagination.tsx"
+        }
+      ]
+    },
+    {
+      "name": "scroll-area",
+      "type": "component",
+      "description": "Radix ScrollArea with thin themed scrollbars, vertical, horizontal or both.",
+      "files": [
+        {
+          "src": "components/ui/scroll-area.tsx"
+        }
+      ]
+    },
+    {
+      "name": "data-table",
+      "type": "component",
+      "description": "Typed columns, sorting, row selection, filter, column toggle, sticky header, pagination.",
+      "files": [
+        {
+          "src": "components/ui/data-table.tsx"
+        }
+      ]
+    },
+    {
+      "name": "priority",
+      "type": "component",
+      "description": "Linear-style priority bars: urgent, high, medium, low, none, with labels.",
+      "files": [
+        {
+          "src": "components/ui/priority.tsx"
+        }
+      ]
+    },
+    {
+      "name": "task-row",
+      "type": "component",
+      "description": "List-view task row with status toggle, priority, project, due date; collapsible groups.",
+      "files": [
+        {
+          "src": "components/ui/task-row.tsx"
+        }
+      ]
+    },
+    {
+      "name": "kanban",
+      "type": "component",
+      "description": "Controlled dnd-kit board: drag cards across columns by mouse or keyboard, WIP limits.",
+      "files": [
+        {
+          "src": "components/ui/kanban.tsx"
+        }
+      ]
+    },
+    {
+      "name": "timeline",
+      "type": "component",
+      "description": "Gantt timeline: day/week scale, status bars, milestones, today line, weekend shading.",
+      "files": [
+        {
+          "src": "components/ui/timeline.tsx"
+        }
+      ]
+    },
+    {
+      "name": "calendar-view",
+      "type": "component",
+      "description": "Month calendar for scheduled work: 6-week grid, status pills, +N more popover.",
+      "files": [
+        {
+          "src": "components/ui/calendar-view.tsx"
+        }
+      ]
+    },
+    {
+      "name": "activity-feed",
+      "type": "component",
+      "description": "Activity feed with avatars, rich sentences, inline statuses and live relative times.",
+      "files": [
+        {
+          "src": "components/ui/activity-feed.tsx"
         }
       ]
     }
