@@ -1,14 +1,23 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRightIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Showcase } from "./_home/showcase";
 import { SiteHeader } from "./_docs/site-header";
+import { JsonLd } from "./_docs/json-ld";
+import { HOME_DESCRIPTION, pageMetadata, siteJsonLd } from "./_docs/seo";
 import { repoUrl } from "./_docs/site";
+
+export const metadata: Metadata = {
+  ...pageMetadata({ path: "/", title: "Digitexa UI", description: HOME_DESCRIPTION, type: "website" }),
+  title: { absolute: "Digitexa UI: open-source React component kit" },
+};
 
 export default function Home() {
   return (
     <div className="min-h-dvh">
+      <JsonLd data={siteJsonLd(HOME_DESCRIPTION)} />
       <SiteHeader />
       <main className="mx-auto max-w-[1400px] px-4 sm:px-6">
         <section className="flex flex-col items-center py-20 text-center sm:py-28">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { HOME_DESCRIPTION, pageMetadata } from "./_docs/seo";
 import { siteUrl } from "./_docs/site";
 import "./globals.css";
 
@@ -10,20 +11,13 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin",
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: "Digitexa UI", template: "%s · Digitexa UI" },
-  description: "An open-source, copy-paste component kit for dense, warm interfaces.",
-  openGraph: {
-    type: "website",
-    siteName: "Digitexa UI",
-    title: "Digitexa UI",
-    description: "Open-source, copy-paste React components with kanban, timeline and calendar built in.",
-    url: "/",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Digitexa UI",
-    description: "Open-source, copy-paste React components with kanban, timeline and calendar built in.",
-  },
+  title: { default: "Digitexa UI: open-source React component kit", template: "%s · Digitexa UI" },
+  description: HOME_DESCRIPTION,
+  applicationName: "Digitexa UI",
+  authors: [{ name: "Digitexa", url: "https://digitexa.com" }],
+  keywords: ["React components", "Next.js", "Tailwind CSS", "Radix UI", "design system", "kanban", "UI kit", "open source"],
+  robots: { index: true, follow: true },
+  ...pageMetadata({ path: "/", title: "Digitexa UI", description: HOME_DESCRIPTION, type: "website" }),
 };
 
 // Apply the saved theme/accent before first paint (no flash).

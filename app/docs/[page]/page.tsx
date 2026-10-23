@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { docMarkdown, docPages, readDoc, type DocSlug } from "../../_docs/content";
 import { DocPage } from "../../_docs/doc-page";
 import { extractHeadings, Markdown } from "../../_docs/markdown";
+import { pageMetadata } from "../../_docs/seo";
 
 const pages: DocSlug[] = docPages.filter((p) => p !== "introduction");
 
@@ -18,8 +19,7 @@ export async function generateMetadata({ params }: PageProps<"/docs/[page]">): P
   const { page } = await params;
   if (!pages.includes(page as DocSlug)) return {};
   const doc = await readDoc(page as DocSlug);
-  const og = { title: `${doc.title} · Digitexa UI`, description: doc.description };
-  return { title: doc.title, description: doc.description, openGraph: og, twitter: { card: "summary_large_image", ...og } };
+  return pageMetadata({ path: `/docs/${page}`, title: doc.title, description: doc.description });
 }
 
 export default function MarkdownPage({ params }: PageProps<"/docs/[page]">) {

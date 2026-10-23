@@ -52,3 +52,4 @@ next-env.d.ts
 /public/llms.txt
 /public/llms-full.txt
 /public/md/
+/app/_docs/build-info.gen.ts

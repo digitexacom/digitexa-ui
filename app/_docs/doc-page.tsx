@@ -3,7 +3,9 @@ import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { CopyPage } from "./copy-page";
+import { JsonLd } from "./json-ld";
 import { docsOrder } from "./nav";
+import { docJsonLd } from "./seo";
 import { siteUrl } from "./site";
 import { Toc, type TocItem } from "./toc";
 
@@ -24,8 +26,16 @@ export function DocPage({ href, title, description, markdown, markdownUrl, toc, 
   const next = index >= 0 && index < docsOrder.length - 1 ? docsOrder[index + 1] : null;
   const absolute = (path: string) => (path.startsWith("http") ? path : `${siteUrl}${path}`);
 
+  const trail =
+    href === "/docs"
+      ? [{ name: "Docs", path: "/docs" }]
+      : href.startsWith("/docs/components/")
+        ? [{ name: "Docs", path: "/docs" }, { name: "Components", path: "/docs/components" }, { name: title, path: href }]
+        : [{ name: "Docs", path: "/docs" }, { name: title, path: href }];
+
   return (
     <div className="flex min-w-0 flex-1 gap-12">
+      <JsonLd data={docJsonLd({ path: href, title, description: description ?? "", trail })} />
       <article className="mx-auto w-full max-w-3xl min-w-0 py-10">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>

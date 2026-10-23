@@ -3,8 +3,13 @@ import Link from "next/link";
 
 import { DocPage } from "../../_docs/doc-page";
 import { componentGroups, sortedComponents } from "../../_docs/nav";
+import { pageMetadata } from "../../_docs/seo";
 
-export const metadata: Metadata = { title: "Components", description: "Every component in the kit." };
+export const metadata: Metadata = pageMetadata({
+  path: "/docs/components",
+  title: "Components",
+  description: "All 53 Digitexa UI components: forms, overlays, data display, layout and project management (kanban, timeline, calendar view).",
+});
 
 const projectManagement = componentGroups.find((g) => g.title === "Project management")?.items ?? [];
 

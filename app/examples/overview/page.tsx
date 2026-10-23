@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+
+import { pageMetadata } from "../../_docs/seo";
 import { GanttChartIcon, PlusIcon } from "lucide-react";
 
 import { Avatar } from "@/components/ui/avatar";
@@ -12,7 +14,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { health, projects } from "../_shell/data";
 import { ExampleShell } from "../_shell/shell";
 
-export const metadata: Metadata = { title: "Workspace overview", description: "Example app built only from Digitexa UI components." };
+export const metadata: Metadata = pageMetadata({ path: "/examples/overview", title: "Workspace overview example", description: "Example project-management dashboard built only from Digitexa UI components: stats, portfolio table, status breakdown and workload.", type: "website" });
 
 const byStatus = [
   { status: "backlog", count: 6 },

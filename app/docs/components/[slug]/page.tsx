@@ -8,6 +8,7 @@ import { DocPage } from "../../../_docs/doc-page";
 import { CommandLine } from "../../../_docs/install-command";
 import { CodeBlock } from "../../../_docs/markdown";
 import { allComponents } from "../../../_docs/nav";
+import { pageMetadata } from "../../../_docs/seo";
 import { installCommand } from "../../../_docs/site";
 
 // Every slug is prerendered. Don't wrap the body in <Suspense> to silence the "params outside Suspense"
@@ -22,8 +23,7 @@ export async function generateMetadata({ params }: PageProps<"/docs/components/[
   const { slug } = await params;
   const item = allComponents.find((c) => c.slug === slug);
   if (!item) return {};
-  const og = { title: `${item.title} · Digitexa UI`, description: item.description };
-  return { title: item.title, description: item.description, openGraph: og, twitter: { card: "summary_large_image", ...og } };
+  return pageMetadata({ path: `/docs/components/${slug}`, title: `${item.title} component`, description: `${item.description} Open-source React component for Next.js and Tailwind CSS.` });
 }
 
 export default function ComponentPage({ params }: PageProps<"/docs/components/[slug]">) {

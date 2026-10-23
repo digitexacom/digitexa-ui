@@ -7,12 +7,14 @@ import { BotIcon, FileTextIcon, ListIcon } from "lucide-react";
 import { DocPage } from "../../_docs/doc-page";
 import { CommandLine, CopyButton } from "../../_docs/install-command";
 import { extractHeadings, Markdown } from "../../_docs/markdown";
+import { pageMetadata } from "../../_docs/seo";
 import { siteUrl } from "../../_docs/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/docs/ai",
   title: "For AI agents",
-  description: "Rules and machine-readable references so coding agents build UI with Digitexa UI correctly.",
-};
+  description: "Rules, llms.txt and Markdown references so coding agents like Claude and Cursor build UI with Digitexa UI correctly.",
+});
 
 async function readRules() {
   "use cache";
