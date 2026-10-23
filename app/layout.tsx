@@ -10,6 +10,8 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin", "lat
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin", "latin-ext"] });
 
 export const metadata: Metadata = {
+  // spread first so the title template below isn't overwritten
+  ...pageMetadata({ path: "/", title: "Digitexa UI", description: HOME_DESCRIPTION, type: "website" }),
   metadataBase: new URL(siteUrl),
   title: { default: "Digitexa UI: open-source React component kit", template: "%s · Digitexa UI" },
   description: HOME_DESCRIPTION,
@@ -17,7 +19,6 @@ export const metadata: Metadata = {
   authors: [{ name: "Digitexa", url: "https://digitexa.com" }],
   keywords: ["React components", "Next.js", "Tailwind CSS", "Radix UI", "design system", "kanban", "UI kit", "open source"],
   robots: { index: true, follow: true },
-  ...pageMetadata({ path: "/", title: "Digitexa UI", description: HOME_DESCRIPTION, type: "website" }),
 };
 
 // Apply the saved theme/accent before first paint (no flash).
