@@ -11,6 +11,11 @@
 - Button `loading`, Avatar `status`.
 - Sheet: `Peek` / `PeekContent` for list detail panels that float without blocking or reflowing the page; `overlay` prop.
 - Fix: menus, selects and popovers now open above dialogs and sheets.
+- Fix: docs demos rendered as static HTML without hydrating.
+- Kanban on mobile: below 768px columns take 88% of the board and snap, with column chips (counts) to jump
+  between them. Touch drag starts on a ~250ms long press, so swiping a card scrolls the page; boards auto-scroll
+  at the edges while dragging. Touch screens also get a Move button that opens a bottom sheet of columns
+  (`labels={{ move: "Taşı", moveTitle: "Taşı" }}` to translate).
 
 - Example settings screen (`/examples/settings`): theme cards, accent, interface and sidebar density, motion,
   workspace and profile forms, notification switches.

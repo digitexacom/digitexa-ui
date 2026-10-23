@@ -6,7 +6,8 @@ import {
   DndContext,
   DragOverlay,
   KeyboardSensor,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useDroppable,
   useSensor,
   useSensors,
@@ -18,13 +19,14 @@ import {
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { PlusIcon } from "lucide-react";
+import { ArrowRightLeftIcon, CheckIcon, PlusIcon } from "lucide-react";
 
 import { Avatar, AvatarGroup } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PriorityIcon, priorityLabels, type Priority } from "@/components/ui/priority";
 import { Progress } from "@/components/ui/progress";
+import { Sheet, SheetBody, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { StatusIcon, type StatusIconStatus } from "@/components/ui/status-icon";
 import { DueDate, type Person, type TagColor } from "@/components/ui/task-row";
 import { cn } from "@/lib/utils";
@@ -57,8 +59,10 @@ type KanbanBoardProps<T extends KanbanItem> = Omit<React.ComponentProps<"div">, 
   onAdd?: (columnId: UniqueIdentifier) => void;
   /** Text used in screen-reader announcements, e.g. the card title. */
   getItemLabel?: (item: T) => string;
-  /** Width of every column; any CSS length. */
+  /** Width of every column on desktop; any CSS length. Below 768px columns take 88% of the board and snap. */
   columnWidth?: string;
+  /** Text for the touch "move" action and its sheet, for translation. */
+  labels?: { move?: string; moveTitle?: string; moveDescription?: string };
 };
 
 function findColumn<T extends KanbanItem>(columns: KanbanColumnData<T>[], id: UniqueIdentifier) {
@@ -82,6 +86,7 @@ function KanbanBoard<T extends KanbanItem>({
   onAdd,
   getItemLabel,
   columnWidth = "18rem",
+  labels,
   className,
   style,
   ...props
@@ -95,10 +100,53 @@ function KanbanBoard<T extends KanbanItem>({
   // dnd-kit needs a number, so the drop animation reads --dx-motion (0 under reduced motion) at drag start
   const [dropMs, setDropMs] = React.useState(170);
 
+  // Mouse drags after 4px; touch needs a ~250ms press so a swipe still scrolls the page and the board.
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 6 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
+  const boardRef = React.useRef<HTMLDivElement>(null);
+  const [visibleColumn, setVisibleColumn] = React.useState<UniqueIdentifier | null>(null);
+  const [moving, setMoving] = React.useState<UniqueIdentifier | null>(null);
+
+  // a column's left edge in the board's scroll coordinates
+  const columnOffset = (board: HTMLElement, el: HTMLElement) => el.getBoundingClientRect().left - board.getBoundingClientRect().left + board.scrollLeft;
+
+  // mobile chips: the column whose left edge is nearest the scroll position is the current one
+  function updateVisibleColumn() {
+    const board = boardRef.current;
+    if (!board) return;
+    let best: { id: string | null; d: number } = { id: null, d: Infinity };
+    for (const el of board.querySelectorAll<HTMLElement>("[data-slot=kanban-column]")) {
+      const d = Math.abs(columnOffset(board, el) - board.scrollLeft);
+      if (d < best.d) best = { id: el.dataset.columnId ?? null, d };
+    }
+    if (best.id) setVisibleColumn(best.id);
+  }
+
+  function scrollToColumn(id: UniqueIdentifier) {
+    const board = boardRef.current;
+    const el = board?.querySelector<HTMLElement>(`[data-column-id="${globalThis.CSS.escape(String(id))}"]`);
+    if (!board || !el) return;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches || document.documentElement.dataset.motion === "reduce";
+    board.scrollTo({ left: columnOffset(board, el), behavior: reduce ? "auto" : "smooth" });
+    setVisibleColumn(String(id));
+  }
+
+  // touch alternative to dragging: pick a column from a sheet
+  function moveTo(itemId: UniqueIdentifier, columnId: UniqueIdentifier) {
+    const start = locate(columns, itemId);
+    if (!start || start.columnId === columnId) return;
+    const next = columns.map((c) => {
+      if (c.id === start.columnId) return { ...c, items: c.items.filter((i) => i.id !== itemId) };
+      if (c.id === columnId) return { ...c, items: [...c.items, start.item] };
+      return c;
+    });
+    const end = locate(next, itemId)!;
+    onChange?.(next);
+    onMove?.({ item: start.item, from: { columnId: start.columnId, index: start.index }, to: { columnId, index: end.index } }, next);
+  }
 
   const labelOf = (id: UniqueIdentifier) => {
     const hit = locate(shown, id);
@@ -185,6 +233,8 @@ function KanbanBoard<T extends KanbanItem>({
       id={dndId}
       sensors={sensors}
       collisionDetection={closestCorners}
+      // scroll the board (and page) when a dragged card nears an edge
+      autoScroll={{ threshold: { x: 0.18, y: 0.15 }, acceleration: 14 }}
       accessibility={{
         announcements,
         screenReaderInstructions: {
@@ -196,22 +246,78 @@ function KanbanBoard<T extends KanbanItem>({
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
+      {/* mobile: one chip per column, tap to jump */}
+      <div data-slot="kanban-chips" className="mb-2 flex gap-1.5 overflow-x-auto pb-1 md:hidden" role="tablist" aria-label="Columns">
+        {shown.map((col) => (
+          <button
+            key={col.id}
+            role="tab"
+            aria-selected={(visibleColumn ?? String(shown[0]?.id)) === String(col.id)}
+            onClick={() => scrollToColumn(col.id)}
+            className={cn(
+              "flex h-(--dx-control-md) shrink-0 items-center gap-1.5 rounded-full border border-border bg-surface px-3 text-sm whitespace-nowrap text-fg-muted",
+              "aria-selected:border-transparent aria-selected:bg-fg aria-selected:text-bg",
+            )}
+          >
+            {col.status && <StatusIcon status={col.status} label="" className="size-3" />}
+            {col.title}
+            <span className="tabular-nums opacity-70">{col.items.length}</span>
+          </button>
+        ))}
+      </div>
       <div
+        ref={boardRef}
+        onScroll={updateVisibleColumn}
         data-slot="kanban-board"
-        className={cn("flex items-start gap-3 overflow-x-auto pb-2", className)}
+        data-dragging={activeId !== null || undefined}
+        className={cn(
+          "flex items-start gap-3 overflow-x-auto pb-2",
+          // mobile: near-full-width columns that snap; snapping pauses while a card is dragged so edge auto-scroll works
+          "max-md:snap-x max-md:snap-mandatory max-md:scroll-px-0 max-md:data-dragging:snap-none",
+          className,
+        )}
         style={{ ["--dx-kanban-column" as string]: columnWidth, ...style }}
         {...props}
       >
         {shown.map((col) => (
           <DroppableColumn key={col.id} column={col} onAdd={onAdd ? () => onAdd(col.id) : undefined}>
             {col.items.map((item) => (
-              <SortableCard key={item.id} id={item.id} label={getItemLabel?.(item)}>
+              <SortableCard key={item.id} id={item.id} label={getItemLabel?.(item)} moveLabel={labels?.move ?? "Move"} onMoveRequest={() => setMoving(item.id)}>
                 {(dragging) => renderCard(item, { overlay: false, dragging })}
               </SortableCard>
             ))}
           </DroppableColumn>
         ))}
       </div>
+      <Sheet open={moving !== null} onOpenChange={(open) => !open && setMoving(null)}>
+        <SheetContent side="bottom" className="pb-[env(safe-area-inset-bottom)]">
+          <SheetHeader>
+            <SheetTitle>{labels?.moveTitle ?? "Move to"}</SheetTitle>
+            <SheetDescription>{moving !== null ? labelOf(moving) : ""}{labels?.moveDescription ? ` · ${labels.moveDescription}` : ""}</SheetDescription>
+          </SheetHeader>
+          <SheetBody className="flex flex-col gap-1">
+            {shown.map((col) => {
+              const current = moving !== null && findColumn(shown, moving)?.id === col.id;
+              return (
+                <button
+                  key={col.id}
+                  aria-current={current || undefined}
+                  onClick={() => {
+                    if (moving !== null) moveTo(moving, col.id);
+                    setMoving(null);
+                  }}
+                  className="flex h-11 items-center gap-2.5 rounded-md px-2 text-left text-md hover:bg-muted aria-[current=true]:bg-selected"
+                >
+                  {col.status && <StatusIcon status={col.status} label="" />}
+                  <span className="flex-1">{col.title}</span>
+                  <span className="text-sm text-fg-subtle tabular-nums">{col.items.length}</span>
+                  {current && <CheckIcon className="size-4 text-fg" />}
+                </button>
+              );
+            })}
+          </SheetBody>
+        </SheetContent>
+      </Sheet>
       <DragOverlay dropAnimation={{ duration: dropMs, easing: "cubic-bezier(0.22, 0.9, 0.3, 1)" /* = --dx-motion-ease; WAAPI cannot read vars */ }}>
         {activeItem ? (
           <div data-slot="kanban-overlay" className="cursor-grabbing rounded-md shadow-lg [&>*]:shadow-none">
@@ -235,6 +341,7 @@ function DroppableColumn<T extends KanbanItem>({
   const { setNodeRef, isOver } = useDroppable({ id: column.id });
   return (
     <KanbanColumn
+      data-column-id={String(column.id)}
       title={column.title}
       status={column.status}
       count={column.items.length}
@@ -253,8 +360,22 @@ function DroppableColumn<T extends KanbanItem>({
   );
 }
 
-function SortableCard({ id, label, children }: { id: UniqueIdentifier; label?: string; children: (dragging: boolean) => React.ReactNode }) {
+function SortableCard({
+  id,
+  label,
+  moveLabel,
+  onMoveRequest,
+  children,
+}: {
+  id: UniqueIdentifier;
+  label?: string;
+  moveLabel: string;
+  onMoveRequest: () => void;
+  children: (dragging: boolean) => React.ReactNode;
+}) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  // keep presses on the move button from starting a drag (mouse, touch or keyboard)
+  const stop = (e: React.SyntheticEvent) => e.stopPropagation();
   return (
     <div
       ref={setNodeRef}
@@ -266,12 +387,28 @@ function SortableCard({ id, label, children }: { id: UniqueIdentifier; label?: s
       aria-label={label}
       style={{ transform: CSS.Translate.toString(transform), transition }}
       className={cn(
-        "touch-none rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        // no touch-none: the page scrolls under a finger; dragging starts after a long press
+        "group/item relative rounded-md outline-none select-none focus-visible:ring-2 focus-visible:ring-ring [-webkit-touch-callout:none]",
         // the card left behind becomes a placeholder
         "data-dragging:opacity-40 data-dragging:[&>*]:border-dashed",
+        // keep card text clear of the move button
+        "pointer-coarse:[&>*:first-child]:pr-10",
       )}
     >
       {children(isDragging)}
+      {/* touch screens get an explicit move action next to long-press dragging */}
+      <button
+        type="button"
+        aria-label={label ? `${moveLabel}: ${label}` : moveLabel}
+        onClick={onMoveRequest}
+        onPointerDown={stop}
+        onMouseDown={stop}
+        onTouchStart={stop}
+        onKeyDown={stop}
+        className="absolute top-1.5 right-1.5 hidden size-7 place-items-center rounded-md border border-border bg-surface text-fg-muted shadow-sm pointer-coarse:grid"
+      >
+        <ArrowRightLeftIcon className="size-3.5" />
+      </button>
     </div>
   );
 }
@@ -297,6 +434,8 @@ function KanbanColumn({ title, status, count, limit, onAdd, bodyRef, className, 
       aria-label={title}
       className={cn(
         "flex max-h-full w-(--dx-kanban-column,18rem) shrink-0 flex-col rounded-lg bg-bg-subtle",
+        // mobile: 88% of the board, so the next column peeks in
+        "max-md:w-[88%] max-md:snap-start",
         "transition-[box-shadow] duration-(--dx-motion-fast) data-over:ring-1 data-over:ring-border-strong",
         className,
       )}
