@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -11,6 +10,10 @@ import { CodeBlock } from "../../../_docs/markdown";
 import { allComponents } from "../../../_docs/nav";
 import { installCommand } from "../../../_docs/site";
 
+// Every slug is prerendered. Don't wrap the body in <Suspense> to silence the "params outside Suspense"
+// hint: with cacheComponents that left the demos un-hydrated (static HTML, no interactivity).
+export const instant = false;
+
 export function generateStaticParams() {
   return allComponents.map((c) => ({ slug: c.slug }));
 }
@@ -22,12 +25,7 @@ export async function generateMetadata({ params }: PageProps<"/docs/components/[
 }
 
 export default function ComponentPage({ params }: PageProps<"/docs/components/[slug]">) {
-  // the docs frame renders instantly; the body streams in once params resolve
-  return (
-    <Suspense fallback={<div className="flex-1" />}>
-      <ComponentDoc params={params} />
-    </Suspense>
-  );
+  return <ComponentDoc params={params} />;
 }
 
 function H2({ id, children }: { id: string; children: React.ReactNode }) {

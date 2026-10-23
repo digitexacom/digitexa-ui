@@ -98,9 +98,12 @@ if (errors.length) {
   process.exit(1);
 }
 
-await rm(outDir, { recursive: true, force: true });
+// write in place, then drop stale files, so a running dev server never sees an empty registry
 await mkdir(outDir, { recursive: true });
+const keep = new Set(["index.json"]);
 for (const item of built) {
+  keep.add(`${item.name}.json`);
+  keep.add(`${item.name}.md`);
   const out = {
     name: item.name,
     type: item.type,
@@ -225,5 +228,6 @@ for (const item of built) {
   full.push(md, "");
 }
 await writeFile(join(root, "public", "llms-full.txt"), full.join("\n"));
+for (const f of await readdir(outDir)) if (!keep.has(f)) await rm(join(outDir, f), { force: true });
 
 console.log(`✓ ${built.length} items → public/r/, CLI → public/dx.mjs${site ? ` (registry: ${site}/r)` : ""}, ${demoFiles.length} demos, llms.txt`);

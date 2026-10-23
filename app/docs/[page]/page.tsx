@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -7,6 +6,9 @@ import { DocPage } from "../../_docs/doc-page";
 import { extractHeadings, Markdown } from "../../_docs/markdown";
 
 const pages: DocSlug[] = docPages.filter((p) => p !== "introduction");
+
+// prerendered for every page; see the note in docs/components/[slug]/page.tsx
+export const instant = false;
 
 export function generateStaticParams() {
   return pages.map((page) => ({ page }));
@@ -20,11 +22,7 @@ export async function generateMetadata({ params }: PageProps<"/docs/[page]">): P
 }
 
 export default function MarkdownPage({ params }: PageProps<"/docs/[page]">) {
-  return (
-    <Suspense fallback={<div className="flex-1" />}>
-      <Content params={params} />
-    </Suspense>
-  );
+  return <Content params={params} />;
 }
 
 async function Content({ params }: { params: PageProps<"/docs/[page]">["params"] }) {
