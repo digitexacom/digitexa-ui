@@ -32,7 +32,8 @@ Follow these rules when you write or change UI.
   `text-lg` 16, `text-xl` 19, `text-2xl` 24, `text-3xl` 30. Spacing is Tailwind's 4px scale.
 - Radius: `rounded-sm` 4, `rounded-md` 6 (controls), `rounded-lg` 9 (cards, menus), `rounded-xl` 12.
 - Shadows: `shadow-sm` (controls, cards), `shadow-md`, `shadow-lg` (menus, dialogs).
-- Layering: `z-(--dx-z-sticky)`, `z-(--dx-z-dropdown)`, `z-(--dx-z-overlay)`, `z-(--dx-z-toast)`, `z-(--dx-z-tooltip)`.
+- Layering, low to high: `z-(--dx-z-sticky)`, `z-(--dx-z-overlay)` (dialogs, sheets), `z-(--dx-z-dropdown)`
+  (menus, selects, popovers; above overlays so they work inside dialogs), `z-(--dx-z-toast)`, `z-(--dx-z-tooltip)`.
 - Motion: durations `duration-(--dx-motion-fast)` / `duration-(--dx-motion)`; they drop to 0 for reduced motion.
 
 ## Theming

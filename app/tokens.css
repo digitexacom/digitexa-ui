@@ -56,10 +56,11 @@
   --dx-sidebar-width-collapsed: 52px;
   --dx-topbar-height: 48px;
 
-  /* stacking */
+  /* stacking: floating panels sit above overlays, because selects, menus and popovers
+     are opened from inside dialogs and sheets and portal to <body> */
   --dx-z-sticky: 20;
-  --dx-z-dropdown: 40;
-  --dx-z-overlay: 50;
+  --dx-z-overlay: 40;
+  --dx-z-dropdown: 50;
   --dx-z-toast: 60;
   --dx-z-tooltip: 70;
 
