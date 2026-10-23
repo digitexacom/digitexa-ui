@@ -16,6 +16,8 @@
   between them. Touch drag starts on a ~250ms long press, so swiping a card scrolls the page; boards auto-scroll
   at the edges while dragging. Touch screens also get a Move button that opens a bottom sheet of columns
   (`labels={{ move: "Taşı", moveTitle: "Taşı" }}` to translate).
+- Kanban: `moveKanbanItem()` helper and a "Saving to a server" example: optimistic move, roll back the card
+  if the request fails, toast with Retry.
 
 - Example settings screen (`/examples/settings`): theme cards, accent, interface and sidebar density, motion,
   workspace and profile forms, notification switches.

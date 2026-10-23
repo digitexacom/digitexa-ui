@@ -2,7 +2,11 @@
 
 import * as React from "react";
 
-import { KanbanBoard, KanbanCard, type KanbanColumnData } from "@/components/ui/kanban";
+import { KanbanBoard, KanbanCard, moveKanbanItem, type KanbanColumnData, type KanbanMove } from "@/components/ui/kanban";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import { Switch } from "@/components/ui/switch";
+import { toast, Toaster } from "@/components/ui/toast";
 import type { Priority } from "@/components/ui/priority";
 import type { TagColor } from "@/components/ui/task-row";
 import { useNow } from "@/lib/use-now";
@@ -67,7 +71,13 @@ const build = (day: (n: number) => Date): KanbanColumnData<Card>[] => [
 
 export default function Demo() {
   const now = useNow();
-  return now ? <Board today={now} /> : <div className="h-[29rem] w-full" />;
+  if (!now) return <div className="h-[29rem] w-full" />;
+  return (
+    <div className="flex w-full flex-col gap-10">
+      <Board today={now} />
+      <ServerBoard today={now} />
+    </div>
+  );
 }
 
 function Board({ today }: { today: Date }) {
@@ -93,5 +103,80 @@ function Board({ today }: { today: Date }) {
         />
       )}
     />
+  );
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Saving to a server: update the board right away (optimistic), send the request, and if it fails
+ * put just that card back where it was and tell the user. Rolling back only the failed card (not
+ * restoring a snapshot) keeps any other moves made in the meantime.
+ * ------------------------------------------------------------------------------------------- */
+
+// stand-in for your API: resolves after ~700ms, or rejects when `fail` is on
+const saveMove = (fail: boolean) => new Promise<void>((resolve, reject) => setTimeout(() => (fail ? reject(new Error("503")) : resolve()), 700));
+
+function ServerBoard({ today }: { today: Date }) {
+  const [columns, setColumns] = React.useState(() => build(dayFrom(today)).map((c) => ({ ...c, items: c.items.slice(0, 2) })));
+  const [saving, setSaving] = React.useState<Set<string>>(() => new Set());
+  const [failRequests, setFailRequests] = React.useState(true);
+
+  async function persist(move: KanbanMove<Card>, next: KanbanColumnData<Card>[]) {
+    const id = move.item.id;
+    setColumns(next); // 1. optimistic: the card is already where it was dropped
+    setSaving((s) => new Set(s).add(id));
+    try {
+      await saveMove(failRequests); // 2. e.g. fetch(`/api/tasks/${id}`, { method: "PATCH", body: … })
+    } catch {
+      // 3. roll back only this card, then explain what happened
+      setColumns((cur) => moveKanbanItem(cur, id, move.from));
+      const from = columns.find((c) => c.id === move.from.columnId)?.title;
+      toast.error(`Couldn't move “${move.item.title}”`, {
+        description: `The server didn't respond, so it's back in ${from}.`,
+        action: { label: "Retry", onClick: () => persist(move, moveKanbanItem(columnsRef.current, id, move.to)) },
+      });
+    } finally {
+      setSaving((s) => {
+        const n = new Set(s);
+        n.delete(id);
+        return n;
+      });
+    }
+  }
+
+  // the retry button runs later, so it needs the board as it is then
+  const columnsRef = React.useRef(columns);
+  React.useEffect(() => {
+    columnsRef.current = columns;
+  }, [columns]);
+
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <div className="font-medium">Saving to a server</div>
+          <div className="text-sm text-fg-muted">Optimistic move, then roll back the card if the request fails.</div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Switch id="fail-requests" checked={failRequests} onCheckedChange={setFailRequests} />
+          <Label htmlFor="fail-requests">Simulate server errors</Label>
+        </div>
+      </div>
+      <KanbanBoard
+        className="w-full"
+        columns={columns}
+        onMove={persist}
+        getItemLabel={(c) => c.title}
+        renderCard={(c) => (
+          <KanbanCard identifier={c.id} title={c.title} priority={c.priority} assignees={c.assignees.map((name) => ({ name }))} className={saving.has(c.id) ? "opacity-70" : undefined}>
+            {saving.has(c.id) && (
+              <span className="flex items-center gap-1.5 text-xs text-fg-subtle">
+                <Spinner size="xs" aria-hidden /> Saving…
+              </span>
+            )}
+          </KanbanCard>
+        )}
+      />
+      <Toaster position="bottom-right" />
+    </div>
   );
 }

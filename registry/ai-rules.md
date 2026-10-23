@@ -59,5 +59,8 @@ Follow these rules when you write or change UI.
 - Key numbers: `StatGroup` + `Stat` from `card`. Status: `StatusBadge` / `StatusIcon`. Breakdown bars: `Meter`.
 - Menus: `DropdownMenu`; search and actions: `CommandDialog` with `useCommandShortcut()` for ⌘K.
 - Confirm destructive actions with `AlertDialog` (or `Dialog`) and a `danger` button.
+- Kanban boards that save to a server: in `onMove`, set the next columns right away (optimistic), send the
+  request, and on failure roll back only that card with `moveKanbanItem(cur, move.item.id, move.from)` plus a
+  `toast.error` with a Retry action. See the "Saving to a server" example on the kanban page.
 - Detail panels opened from a list (a task, an issue) use `Peek` + `PeekContent` from `sheet`: they float over the
   page so the list never reflows or locks. Don't render detail panels as a flex sibling that squeezes the content.

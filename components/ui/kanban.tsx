@@ -77,6 +77,26 @@ function locate<T extends KanbanItem>(columns: KanbanColumnData<T>[], id: Unique
   return null;
 }
 
+/**
+ * Pure helper: returns `columns` with the item moved to `to` (index is clamped). Use it to roll back
+ * an optimistic move — `setColumns((cur) => moveKanbanItem(cur, move.item.id, move.from))` — or to
+ * apply a move that arrived from the server.
+ */
+function moveKanbanItem<T extends KanbanItem>(
+  columns: KanbanColumnData<T>[],
+  itemId: UniqueIdentifier,
+  to: { columnId: UniqueIdentifier; index: number },
+): KanbanColumnData<T>[] {
+  const hit = locate(columns, itemId);
+  if (!hit || !columns.some((c) => c.id === to.columnId)) return columns;
+  const without = columns.map((c) => (c.id === hit.columnId ? { ...c, items: c.items.filter((i) => i.id !== itemId) } : c));
+  return without.map((c) => {
+    if (c.id !== to.columnId) return c;
+    const at = Math.max(0, Math.min(to.index, c.items.length));
+    return { ...c, items: [...c.items.slice(0, at), hit.item, ...c.items.slice(at)] };
+  });
+}
+
 /** Board of sortable columns. Drag with the pointer, or focus a card and use Space + arrow keys. */
 function KanbanBoard<T extends KanbanItem>({
   columns,
@@ -529,4 +549,4 @@ function KanbanCard({ title, identifier, labels, priority, assignees, due, today
   );
 }
 
-export { KanbanBoard, KanbanColumn, KanbanCard, type KanbanBoardProps, type KanbanColumnData, type KanbanItem, type KanbanMove, type KanbanCardProps };
+export { KanbanBoard, KanbanColumn, KanbanCard, moveKanbanItem, type KanbanBoardProps, type KanbanColumnData, type KanbanItem, type KanbanMove, type KanbanCardProps };
