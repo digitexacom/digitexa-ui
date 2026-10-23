@@ -59,3 +59,5 @@ Follow these rules when you write or change UI.
 - Key numbers: `StatGroup` + `Stat` from `card`. Status: `StatusBadge` / `StatusIcon`. Breakdown bars: `Meter`.
 - Menus: `DropdownMenu`; search and actions: `CommandDialog` with `useCommandShortcut()` for ⌘K.
 - Confirm destructive actions with `AlertDialog` (or `Dialog`) and a `danger` button.
+- Detail panels opened from a list (a task, an issue) use `Peek` + `PeekContent` from `sheet`: they float over the
+  page so the list never reflows or locks. Don't render detail panels as a flex sibling that squeezes the content.

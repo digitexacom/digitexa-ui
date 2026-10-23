@@ -9,6 +9,8 @@
   scroll-area, data-table, priority, task-row, kanban, timeline, calendar-view, activity-feed, plus `use-now`.
 - AI docs: `/llms.txt`, `/llms-full.txt`, `/r/<name>.md`, `/md/<page>.md` and the For AI agents page.
 - Button `loading`, Avatar `status`.
+- Sheet: `Peek` / `PeekContent` for list detail panels that float without blocking or reflowing the page; `overlay` prop.
+- Fix: menus, selects and popovers now open above dialogs and sheets.
 
 - Example settings screen (`/examples/settings`): theme cards, accent, interface and sidebar density, motion,
   workspace and profile forms, notification switches.

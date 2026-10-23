@@ -68,12 +68,14 @@ const sheetVariants = cva(
 type SheetContentProps = React.ComponentProps<typeof DialogPrimitive.Content> &
   VariantProps<typeof sheetVariants> & {
     hideClose?: boolean;
+    /** Dim the page behind the panel. Off for peek panels. */
+    overlay?: boolean;
   };
 
-function SheetContent({ className, children, side, size, hideClose = false, ...props }: SheetContentProps) {
+function SheetContent({ className, children, side, size, hideClose = false, overlay = true, ...props }: SheetContentProps) {
   return (
     <SheetPortal>
-      <SheetOverlay />
+      {overlay && <SheetOverlay />}
       <DialogPrimitive.Content
         data-slot="sheet-content"
         data-side={side ?? "right"}
@@ -129,7 +131,44 @@ function SheetDescription({ className, ...props }: React.ComponentProps<typeof D
   return <DialogPrimitive.Description data-slot="sheet-description" className={cn("text-sm text-fg-muted", className)} {...props} />;
 }
 
+/*
+ * Peek: a detail panel that floats over the page without blocking it, like opening a task from a list.
+ * The page underneath doesn't reflow or lock; clicking another row keeps the panel open, so you swap
+ * its content instead of reopening it. Esc and the close button still close it.
+ *
+ *   <Peek open={!!task} onOpenChange={(o) => !o && setTask(null)}>
+ *     <PeekContent>…</PeekContent>
+ *   </Peek>
+ */
+function Peek({ modal = false, ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
+  return <DialogPrimitive.Root modal={modal} {...props} />;
+}
+
+function PeekContent({ className, onInteractOutside, size = "lg", ...props }: Omit<SheetContentProps, "side" | "overlay">) {
+  return (
+    <SheetContent
+      side="right"
+      size={size}
+      overlay={false}
+      // floating card inset from the edges; the page keeps its full width underneath
+      className={cn(
+        "inset-y-2 right-2 h-auto rounded-xl border",
+        // slide fully past the 8px inset
+        "starting:translate-x-[calc(100%+1rem)] data-[state=closed]:translate-x-[calc(100%+1rem)]",
+        className,
+      )}
+      onInteractOutside={(e) => {
+        onInteractOutside?.(e);
+        if (!e.defaultPrevented) e.preventDefault();
+      }}
+      {...props}
+    />
+  );
+}
+
 export {
+  Peek,
+  PeekContent,
   Sheet,
   SheetTrigger,
   SheetClose,
