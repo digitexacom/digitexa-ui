@@ -12,6 +12,18 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { default: "Digitexa UI", template: "%s · Digitexa UI" },
   description: "An open-source, copy-paste component kit for dense, warm interfaces.",
+  openGraph: {
+    type: "website",
+    siteName: "Digitexa UI",
+    title: "Digitexa UI",
+    description: "Open-source, copy-paste React components with kanban, timeline and calendar built in.",
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Digitexa UI",
+    description: "Open-source, copy-paste React components with kanban, timeline and calendar built in.",
+  },
 };
 
 // Apply the saved theme/accent before first paint (no flash).

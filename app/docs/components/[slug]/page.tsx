@@ -21,7 +21,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps<"/docs/components/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const item = allComponents.find((c) => c.slug === slug);
-  return item ? { title: item.title, description: item.description } : {};
+  if (!item) return {};
+  const og = { title: `${item.title} · Digitexa UI`, description: item.description };
+  return { title: item.title, description: item.description, openGraph: og, twitter: { card: "summary_large_image", ...og } };
 }
 
 export default function ComponentPage({ params }: PageProps<"/docs/components/[slug]">) {

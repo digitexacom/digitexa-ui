@@ -18,7 +18,8 @@ export async function generateMetadata({ params }: PageProps<"/docs/[page]">): P
   const { page } = await params;
   if (!pages.includes(page as DocSlug)) return {};
   const doc = await readDoc(page as DocSlug);
-  return { title: doc.title, description: doc.description };
+  const og = { title: `${doc.title} · Digitexa UI`, description: doc.description };
+  return { title: doc.title, description: doc.description, openGraph: og, twitter: { card: "summary_large_image", ...og } };
 }
 
 export default function MarkdownPage({ params }: PageProps<"/docs/[page]">) {
