@@ -58,7 +58,8 @@ Follow these rules when you write or change UI.
 - App frame: `AppShell` + `Sidebar` (+ `SidebarTrigger` in the `Topbar`) from `sidebar`. Use `SidebarProfile` for the
   workspace switcher and the user button, `SidebarSearch` to filter items, and `SidebarGroup collapsible storageKey`
   for trees (pass `forceOpen` while searching). Don't hand-write rail classes: use `SidebarItem show="rail" |
-  "expanded"` or the exported `whenRail` / `whenExpanded`.
+  "expanded"` or the exported `whenRail` / `whenExpanded`. Put `SidebarCollapseButton` in the footer and `SidebarRail` in the
+  `Sidebar` for desktop toggling (they don't move when the width changes); keep `SidebarTrigger` for the mobile drawer.
 - Key numbers: `StatGroup` + `Stat` from `card`. Status: `StatusBadge` / `StatusIcon`. Breakdown bars: `Meter`.
 - Menus: `DropdownMenu`; search and actions: `CommandDialog` with `useCommandShortcut()` for ⌘K.
 - Confirm destructive actions with `AlertDialog` (or `Dialog`) and a `danger` button.

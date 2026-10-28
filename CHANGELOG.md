@@ -6,6 +6,9 @@
   (`collapsible`, `storageKey`, `forceOpen`), `SidebarProfile` (two-line workspace / user button),
   `SidebarItem show="rail" | "expanded"`, exported `whenRail` / `whenExpanded` / `useIsRail`. The scrollbar shows
   on hover only.
+- Sidebar: `SidebarCollapseButton` (footer toggle that stays under the cursor in both states) and `SidebarRail`
+  (click the sidebar's edge to toggle). Fix: collapsible groups no longer spill their titles into the icon rail;
+  the rail layout is pure CSS, so it's right on first paint.
 
 - Docs site rebuilt: homepage with a live showcase, `/docs` with sections and components sidebar, "On this page",
   Copy page (Markdown, open in Claude/ChatGPT), ⌘K search, Installation/Theming/CLI pages, `/docs/components` index.

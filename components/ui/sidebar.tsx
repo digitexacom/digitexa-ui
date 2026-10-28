@@ -2,10 +2,9 @@
 
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
-import { ChevronRightIcon, ChevronsUpDownIcon, PanelLeftIcon, SearchIcon, XIcon } from "lucide-react";
+import { ChevronRightIcon, ChevronsUpDownIcon, PanelLeftCloseIcon, PanelLeftIcon, PanelLeftOpenIcon, SearchIcon, XIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { TooltipContent, TooltipProvider, TooltipRoot, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
@@ -128,7 +127,7 @@ function Sidebar({ className, children, ...props }: React.ComponentProps<"aside"
         data-slot="sidebar"
         data-mobile={mobileOpen ? "open" : "closed"}
         className={cn(
-          "group/sidebar flex w-(--dx-sidebar-width) shrink-0 flex-col overflow-hidden border-r border-border bg-bg-subtle",
+          "group/sidebar relative flex w-(--dx-sidebar-width) shrink-0 flex-col overflow-hidden border-r border-border bg-bg-subtle",
           "transition-[width,translate] duration-(--dx-motion) ease-out",
           "md:in-data-[sidebar=collapsed]:w-(--dx-sidebar-width-collapsed)",
           // mobile: off-canvas drawer
@@ -256,18 +255,19 @@ function SidebarGroup({
   ...props
 }: SidebarGroupProps) {
   const [stored, setStored] = useStoredOpen(storageKey, defaultOpen);
-  const rail = useIsRail();
+  const contentId = React.useId();
   const open = forceOpen || (openProp ?? stored);
-  const setOpen = (next: boolean) => {
+  const toggle = () => {
     if (forceOpen) return;
-    if (openProp === undefined) setStored(next);
-    onOpenChange?.(next);
+    if (openProp === undefined) setStored(!open);
+    onOpenChange?.(!open);
   };
 
-  const divider = <div aria-hidden className="mx-2 my-1 hidden h-px bg-border md:in-data-[sidebar=collapsed]:block" />;
+  // In the icon rail every title hides and every group is flat, so all icons stay reachable.
+  // This is pure CSS (no JS "am I a rail" check), so the first paint is already right.
+  const divider = <div aria-hidden className="mx-2 my-1 hidden h-px shrink-0 bg-border md:in-data-[sidebar=collapsed]:block" />;
 
-  if (!collapsible || rail) {
-    // in the icon rail every group is flat: the title becomes a divider and all icons stay reachable
+  if (!collapsible) {
     return (
       <div data-slot="sidebar-group" role="group" className={cn("flex flex-col gap-px", className)} {...props}>
         {title && (
@@ -285,22 +285,40 @@ function SidebarGroup({
   }
 
   return (
-    <Collapsible open={open} onOpenChange={setOpen} asChild>
-      <div data-slot="sidebar-group" data-collapsible="" role="group" className={cn("flex flex-col gap-px", className)} {...props}>
-        <div className="group/title flex h-(--dx-control-md) shrink-0 items-center rounded-md pr-1 hover:bg-muted">
-          <CollapsibleTrigger asChild>
-            <button type="button" className="group/trigger flex h-full min-w-0 flex-1 items-center gap-1.5 rounded-md px-2 text-left text-base font-medium text-fg-muted hover:text-fg">
-              <ChevronRightIcon aria-hidden className="size-3.5 shrink-0 text-fg-subtle transition-transform duration-(--dx-motion) group-data-[state=open]/trigger:rotate-90" />
-              <span className="min-w-0 flex-1 truncate">{title}</span>
-            </button>
-          </CollapsibleTrigger>
-          {action}
-        </div>
-        <CollapsibleContent>
-          <div className="flex flex-col gap-px">{children}</div>
-        </CollapsibleContent>
+    <div data-slot="sidebar-group" data-collapsible="" data-state={open ? "open" : "closed"} role="group" className={cn("group/sgroup flex flex-col gap-px", className)} {...props}>
+      <div className={cn("flex h-(--dx-control-md) shrink-0 items-center rounded-md pr-1 hover:bg-muted", whenExpanded)}>
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls={contentId}
+          onClick={toggle}
+          className="flex h-full min-w-0 flex-1 items-center gap-1.5 rounded-md px-2 text-left text-base font-medium whitespace-nowrap text-fg-muted hover:text-fg"
+        >
+          <ChevronRightIcon aria-hidden className="size-3.5 shrink-0 text-fg-subtle transition-transform duration-(--dx-motion) group-data-[state=open]/sgroup:rotate-90" />
+          <span className="min-w-0 flex-1 truncate">{title}</span>
+        </button>
+        {action}
       </div>
-    </Collapsible>
+      {divider}
+      {/* grid-rows 0fr→1fr animates the height without measuring; the rail always shows the items */}
+      <div
+        id={contentId}
+        className={cn(
+          "grid transition-[grid-template-rows] duration-(--dx-motion) ease-out",
+          "grid-rows-[0fr] group-data-[state=open]/sgroup:grid-rows-[1fr] md:in-data-[sidebar=collapsed]:grid-rows-[1fr]",
+        )}
+      >
+        <div
+          className={cn(
+            "flex min-h-0 flex-col gap-px overflow-hidden",
+            // closed items are out of the tab order and hidden from assistive tech (but not in the rail)
+            "group-data-[state=closed]/sgroup:invisible md:in-data-[sidebar=collapsed]:visible!",
+          )}
+        >
+          {children}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -475,6 +493,47 @@ function SidebarItem({ icon, active, trailing, depth = 0, tooltip, asChild, show
   );
 }
 
+/**
+ * Collapse/expand control that stays put: it sits in the sidebar footer, at the same distance from the
+ * screen edge in both states, so you can toggle repeatedly without chasing it. Desktop only.
+ */
+function SidebarCollapseButton({ className, ...props }: Omit<React.ComponentProps<"button">, "children">) {
+  const { collapsed, setCollapsed } = useSidebar();
+  return (
+    <SidebarItem
+      asChild
+      icon={collapsed ? <PanelLeftOpenIcon /> : <PanelLeftCloseIcon />}
+      tooltip="Expand sidebar (⌘B)"
+      className={cn("max-md:hidden", className)}
+    >
+      <button type="button" aria-expanded={!collapsed} onClick={() => setCollapsed(!collapsed)} {...props}>
+        Collapse sidebar
+      </button>
+    </SidebarItem>
+  );
+}
+
+/** Invisible handle along the sidebar's right edge: click anywhere on the edge to collapse or expand. */
+function SidebarRail({ className, ...props }: Omit<React.ComponentProps<"button">, "children">) {
+  const { collapsed, setCollapsed } = useSidebar();
+  return (
+    <button
+      type="button"
+      tabIndex={-1}
+      aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+      title={collapsed ? "Expand sidebar (⌘B)" : "Collapse sidebar (⌘B)"}
+      onClick={() => setCollapsed(!collapsed)}
+      className={cn(
+        "absolute inset-y-0 right-0 z-10 w-1.5 cursor-ew-resize outline-none max-md:hidden",
+        // a hairline shows where it is on hover
+        "after:absolute after:inset-y-0 after:right-0 after:w-px after:bg-transparent after:transition-colors after:duration-(--dx-motion-fast) hover:after:bg-border-strong",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
 /** Toggles the icon rail on desktop and the drawer on mobile. */
 function SidebarTrigger({ className, ...props }: React.ComponentProps<typeof Button>) {
   const { collapsed, mobileOpen, toggle } = useSidebar();
@@ -520,5 +579,7 @@ export {
   whenExpanded,
   whenRail,
   SidebarTrigger,
+  SidebarCollapseButton,
+  SidebarRail,
   Topbar,
 };

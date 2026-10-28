@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { SidebarContent, SidebarFooter, SidebarGroup, SidebarItem, SidebarSearch, whenExpanded } from "@/components/ui/sidebar";
+import { SidebarCollapseButton, SidebarContent, SidebarFooter, SidebarGroup, SidebarItem, SidebarSearch, whenExpanded } from "@/components/ui/sidebar";
 import { Tooltip } from "@/components/ui/tooltip";
 import { UserMenu } from "./chrome";
 import { projects } from "./data";
@@ -131,6 +131,7 @@ export function SidebarNav({ page }: { page: "overview" | "settings" }) {
         )}
       </SidebarContent>
       <SidebarFooter>
+        <SidebarCollapseButton />
         <SidebarItem asChild icon={<SettingsIcon />} active={page === "settings"}>
           <Link href="/examples/settings">Settings</Link>
         </SidebarItem>

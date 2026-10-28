@@ -21,6 +21,7 @@ import {
   AppShell,
   Sidebar,
   SidebarHeader,
+  SidebarRail,
   SidebarTrigger,
   Topbar,
 } from "@/components/ui/sidebar";
@@ -43,6 +44,7 @@ function AppSidebar({ page }: { page: Page }) {
         <WorkspaceSwitcher />
       </SidebarHeader>
       <SidebarNav page={page} />
+      <SidebarRail />
     </Sidebar>
   );
 }
@@ -50,7 +52,8 @@ function AppSidebar({ page }: { page: Page }) {
 function AppTopbar({ title }: { title: string }) {
   return (
     <Topbar>
-      <SidebarTrigger />
+      {/* desktop toggles from the sidebar footer (it stays put); the top bar button opens the mobile drawer */}
+      <SidebarTrigger className="md:hidden" />
       <Link href="/" className="text-sm text-fg-subtle hover:text-fg max-sm:hidden">
         Docs
       </Link>
