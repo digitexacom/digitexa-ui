@@ -6,7 +6,6 @@ import Link from "next/link";
 import {
   BellIcon,
   CheckIcon,
-  ChevronsUpDownIcon,
   CircleUserIcon,
   FolderIcon,
   KeyboardIcon,
@@ -22,8 +21,12 @@ import {
   UserPlusIcon,
 } from "lucide-react";
 
-import { Avatar } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import {
+  Avatar,
+} from "@/components/ui/avatar";
+import {
+  Button,
+} from "@/components/ui/button";
 import {
   CommandDialog,
   CommandEmpty,
@@ -42,16 +45,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Kbd } from "@/components/ui/kbd";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useSidebar } from "@/components/ui/sidebar";
-import { StatusIcon } from "@/components/ui/status-icon";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Tooltip } from "@/components/ui/tooltip";
-import { setHtmlAttr, useHtmlAttr } from "../../_docs/theme-switcher";
-
-// hidden while the sidebar is collapsed to an icon rail
-const rail = "md:in-data-[sidebar=collapsed]:hidden";
+import {
+  Kbd,
+} from "@/components/ui/kbd";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  SidebarProfile,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import {
+  StatusIcon,
+} from "@/components/ui/status-icon";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/ui/toggle-group";
+import {
+  Tooltip,
+} from "@/components/ui/tooltip";
+import {
+  setHtmlAttr,
+  useHtmlAttr,
+} from "../../_docs/theme-switcher";
 
 const workspaces = [
   { id: "northwind", name: "Northwind Studio", plan: "Business", mark: "N", tone: "bg-accent text-accent-fg" },
@@ -71,14 +90,7 @@ export function WorkspaceSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button
-          aria-label={`Workspace: ${ws.name}`}
-          className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-1.5 py-1 outline-none hover:bg-muted data-[state=open]:bg-muted md:in-data-[sidebar=collapsed]:flex-none md:in-data-[sidebar=collapsed]:px-1"
-        >
-          <WorkspaceMark ws={ws} />
-          <span className={`truncate font-semibold ${rail}`}>{ws.name}</span>
-          <ChevronsUpDownIcon className={`ml-auto size-3.5 shrink-0 text-fg-subtle ${rail}`} />
-        </button>
+        <SidebarProfile aria-label={`Workspace: ${ws.name}`} media={<WorkspaceMark ws={ws} className="size-7 rounded-md text-xs" />} title={ws.name} subtitle={`${ws.plan} plan`} />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-64">
         <DropdownMenuLabel>Workspaces</DropdownMenuLabel>
@@ -145,14 +157,12 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button
+        <SidebarProfile
           aria-label="Account menu"
-          className="flex h-9 items-center gap-2 rounded-md px-2 text-left outline-none hover:bg-muted data-[state=open]:bg-muted md:in-data-[sidebar=collapsed]:justify-center md:in-data-[sidebar=collapsed]:px-0"
-        >
-          <Avatar name="Mira Okafor" size="sm" status="online" className="[&>[role=img]]:ring-bg-subtle" />
-          <span className={`min-w-0 flex-1 truncate font-medium ${rail}`}>Mira Okafor</span>
-          <ChevronsUpDownIcon className={`size-3.5 shrink-0 text-fg-subtle ${rail}`} />
-        </button>
+          media={<Avatar name="Mira Okafor" size="lg" status="online" className="[&>[role=img]]:ring-bg-subtle" />}
+          title="Mira Okafor"
+          subtitle="mira@northwind.example"
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent side="top" className="w-64">
         <div className="flex items-center gap-3 px-2 py-2.5">

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Sidebar: `SidebarSearch` (filter box; a search button in the icon rail), collapsible `SidebarGroup`
+  (`collapsible`, `storageKey`, `forceOpen`), `SidebarProfile` (two-line workspace / user button),
+  `SidebarItem show="rail" | "expanded"`, exported `whenRail` / `whenExpanded` / `useIsRail`. The scrollbar shows
+  on hover only.
+
 - Docs site rebuilt: homepage with a live showcase, `/docs` with sections and components sidebar, "On this page",
   Copy page (Markdown, open in Claude/ChatGPT), ⌘K search, Installation/Theming/CLI pages, `/docs/components` index.
 - 28 new components: slider, toggle, field, input-group, calendar, date-picker, combobox, alert, alert-dialog,

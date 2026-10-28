@@ -2,9 +2,10 @@
 
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
-import { PanelLeftIcon } from "lucide-react";
+import { ChevronRightIcon, ChevronsUpDownIcon, PanelLeftIcon, SearchIcon, XIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { TooltipContent, TooltipProvider, TooltipRoot, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
@@ -143,8 +144,23 @@ function Sidebar({ className, children, ...props }: React.ComponentProps<"aside"
   );
 }
 
-/** Hidden while the sidebar is an icon rail. */
+/** Hidden while the sidebar is an icon rail. Use on your own elements inside the sidebar. */
 const whenExpanded = "md:in-data-[sidebar=collapsed]:hidden";
+/** Shown only while the sidebar is an icon rail (e.g. a stand-in for a tree that doesn't fit). */
+const whenRail = "hidden md:in-data-[sidebar=collapsed]:flex";
+
+const desktopQuery = "(min-width: 768px)";
+function subscribeDesktop(onChange: () => void) {
+  const mq = matchMedia(desktopQuery);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+/** True when the sidebar is an icon rail right now (collapsed on a desktop-width screen; mobile shows a drawer). */
+function useIsRail() {
+  const { collapsed } = useSidebar();
+  const desktop = React.useSyncExternalStore(subscribeDesktop, () => matchMedia(desktopQuery).matches, () => true);
+  return collapsed && desktop;
+}
 
 function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -160,7 +176,12 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
       data-slot="sidebar-content"
-      className={cn("flex min-h-0 flex-1 flex-col gap-4 overflow-x-hidden overflow-y-auto px-2 py-2", className)}
+      className={cn(
+        "flex min-h-0 flex-1 flex-col gap-4 overflow-x-hidden overflow-y-auto px-2 py-2",
+        // the scrollbar only shows while the pointer is over the sidebar
+        "[scrollbar-color:transparent_transparent] hover:[scrollbar-color:var(--dx-border-strong)_transparent]",
+        className,
+      )}
       {...props}
     />
   );
@@ -170,21 +191,222 @@ function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
   return <div data-slot="sidebar-footer" className={cn("flex shrink-0 flex-col gap-0.5 border-t border-border p-2", className)} {...props} />;
 }
 
-function SidebarGroup({ title, action, className, children, ...props }: React.ComponentProps<"div"> & { title?: React.ReactNode; action?: React.ReactNode }) {
+type SidebarGroupProps = Omit<React.ComponentProps<"div">, "title"> & {
+  title?: React.ReactNode;
+  action?: React.ReactNode;
+  /** Title becomes a chevron toggle that shows and hides the group's items. */
+  collapsible?: boolean;
+  defaultOpen?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** Remember the open state in localStorage under this key. */
+  storageKey?: string;
+  /** Keep it open regardless of state, e.g. while a sidebar search is filtering. */
+  forceOpen?: boolean;
+};
+
+// open state kept in localStorage; read through useSyncExternalStore so every tab and instance agrees
+const storageEvent = "dx-sidebar-group";
+function subscribeStorage(onChange: () => void) {
+  window.addEventListener("storage", onChange);
+  window.addEventListener(storageEvent, onChange);
+  return () => {
+    window.removeEventListener("storage", onChange);
+    window.removeEventListener(storageEvent, onChange);
+  };
+}
+function readStorage(key: string | undefined) {
+  if (!key) return null;
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function useStoredOpen(storageKey: string | undefined, defaultOpen: boolean) {
+  const [local, setLocal] = React.useState(defaultOpen);
+  const saved = React.useSyncExternalStore(subscribeStorage, () => readStorage(storageKey), () => null);
+  const open = storageKey && saved !== null ? saved === "1" : local;
+  const update = React.useCallback(
+    (next: boolean) => {
+      setLocal(next);
+      if (!storageKey) return;
+      try {
+        localStorage.setItem(storageKey, next ? "1" : "0");
+        window.dispatchEvent(new Event(storageEvent));
+      } catch {}
+    },
+    [storageKey],
+  );
+  return [open, update] as const;
+}
+
+function SidebarGroup({
+  title,
+  action,
+  collapsible = false,
+  defaultOpen = true,
+  open: openProp,
+  onOpenChange,
+  storageKey,
+  forceOpen = false,
+  className,
+  children,
+  ...props
+}: SidebarGroupProps) {
+  const [stored, setStored] = useStoredOpen(storageKey, defaultOpen);
+  const rail = useIsRail();
+  const open = forceOpen || (openProp ?? stored);
+  const setOpen = (next: boolean) => {
+    if (forceOpen) return;
+    if (openProp === undefined) setStored(next);
+    onOpenChange?.(next);
+  };
+
+  const divider = <div aria-hidden className="mx-2 my-1 hidden h-px bg-border md:in-data-[sidebar=collapsed]:block" />;
+
+  if (!collapsible || rail) {
+    // in the icon rail every group is flat: the title becomes a divider and all icons stay reachable
+    return (
+      <div data-slot="sidebar-group" role="group" className={cn("flex flex-col gap-px", className)} {...props}>
+        {title && (
+          <>
+            <div className={cn("flex h-6 items-center justify-between px-2 text-2xs font-medium tracking-wide whitespace-nowrap text-fg-subtle uppercase", whenExpanded)}>
+              {title}
+              {action}
+            </div>
+            {divider}
+          </>
+        )}
+        {children}
+      </div>
+    );
+  }
+
   return (
-    <div data-slot="sidebar-group" role="group" className={cn("flex flex-col gap-px", className)} {...props}>
-      {title && (
-        <>
-          <div className={cn("flex h-6 items-center justify-between px-2 text-2xs font-medium tracking-wide whitespace-nowrap text-fg-subtle uppercase", whenExpanded)}>
-            {title}
-            {action}
-          </div>
-          {/* in the icon rail the title becomes a divider */}
-          <div aria-hidden className="mx-2 my-1 hidden h-px bg-border md:in-data-[sidebar=collapsed]:block" />
-        </>
-      )}
-      {children}
+    <Collapsible open={open} onOpenChange={setOpen} asChild>
+      <div data-slot="sidebar-group" data-collapsible="" role="group" className={cn("flex flex-col gap-px", className)} {...props}>
+        <div className="group/title flex h-(--dx-control-md) shrink-0 items-center rounded-md pr-1 hover:bg-muted">
+          <CollapsibleTrigger asChild>
+            <button type="button" className="group/trigger flex h-full min-w-0 flex-1 items-center gap-1.5 rounded-md px-2 text-left text-base font-medium text-fg-muted hover:text-fg">
+              <ChevronRightIcon aria-hidden className="size-3.5 shrink-0 text-fg-subtle transition-transform duration-(--dx-motion) group-data-[state=open]/trigger:rotate-90" />
+              <span className="min-w-0 flex-1 truncate">{title}</span>
+            </button>
+          </CollapsibleTrigger>
+          {action}
+        </div>
+        <CollapsibleContent>
+          <div className="flex flex-col gap-px">{children}</div>
+        </CollapsibleContent>
+      </div>
+    </Collapsible>
+  );
+}
+
+/* ---------------------------------------------------------------- search */
+
+type SidebarSearchProps = Omit<React.ComponentProps<"input">, "value" | "onChange"> & {
+  value: string;
+  onChange: (value: string) => void;
+  /** What the search icon does in the icon rail. Default: expand the sidebar and focus the box. */
+  onRailClick?: () => void;
+};
+
+/** Filter box for the sidebar's items. Esc clears, ↓ moves into the list. In the icon rail it's a search button. */
+function SidebarSearch({ value, onChange, onRailClick, placeholder = "Search…", className, ...props }: SidebarSearchProps) {
+  const { setCollapsed } = useSidebar();
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  return (
+    <div data-slot="sidebar-search" className={cn("shrink-0 px-2 pb-1", className)}>
+      <SidebarItem
+        asChild
+        show="rail"
+        icon={<SearchIcon />}
+        tooltip={typeof placeholder === "string" ? placeholder.replace(/…$/, "") : "Search"}
+      >
+        <button
+          type="button"
+          onClick={() => {
+            if (onRailClick) return onRailClick();
+            setCollapsed(false);
+            requestAnimationFrame(() => inputRef.current?.focus());
+          }}
+        >
+          Search
+        </button>
+      </SidebarItem>
+      <div
+        className={cn(
+          "flex h-(--dx-control-sm) items-center gap-1.5 rounded-md border border-input bg-bg px-2 text-sm",
+          "focus-within:border-accent focus-within:ring-3 focus-within:ring-accent/20",
+          whenExpanded,
+        )}
+      >
+        <SearchIcon aria-hidden className="size-3.5 shrink-0 text-fg-subtle" />
+        <input
+          ref={inputRef}
+          type="search"
+          value={value}
+          placeholder={placeholder}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape" && value) {
+              e.preventDefault();
+              onChange("");
+            }
+            if (e.key === "ArrowDown") {
+              const first = e.currentTarget.closest("[data-slot=sidebar]")?.querySelector<HTMLElement>("[data-slot=sidebar-content] a, [data-slot=sidebar-content] button");
+              if (first) {
+                e.preventDefault();
+                first.focus();
+              }
+            }
+          }}
+          className="h-full min-w-0 flex-1 bg-transparent text-fg outline-none placeholder:text-fg-subtle [&::-webkit-search-cancel-button]:hidden"
+          {...props}
+        />
+        {value && (
+          <button type="button" onClick={() => onChange("")} aria-label="Clear search" className="grid size-4 shrink-0 place-items-center rounded-sm text-fg-subtle hover:text-fg">
+            <XIcon aria-hidden className="size-3" />
+          </button>
+        )}
+      </div>
     </div>
+  );
+}
+
+/* ---------------------------------------------------------------- profile */
+
+type SidebarProfileProps = Omit<React.ComponentProps<"button">, "title"> & {
+  /** Logo, workspace mark or avatar. The only part left in the icon rail. */
+  media: React.ReactNode;
+  title: React.ReactNode;
+  subtitle?: React.ReactNode;
+  /** Right side; defaults to an up/down chevron. Pass null for none. */
+  trailing?: React.ReactNode;
+};
+
+/** Two-line identity button for the header (workspace) or footer (user). Wrap in a DropdownMenuTrigger asChild. */
+function SidebarProfile({ media, title, subtitle, trailing, className, ...props }: SidebarProfileProps) {
+  return (
+    <button
+      type="button"
+      data-slot="sidebar-profile"
+      className={cn(
+        "flex w-full min-w-0 items-center gap-2.5 rounded-md p-1.5 text-left hover:bg-muted data-[state=open]:bg-muted",
+        "md:in-data-[sidebar=collapsed]:justify-center md:in-data-[sidebar=collapsed]:p-1",
+        className,
+      )}
+      {...props}
+    >
+      <span className="grid shrink-0 place-items-center">{media}</span>
+      <span className={cn("flex min-w-0 flex-1 flex-col leading-tight", whenExpanded)}>
+        <span className="truncate font-semibold">{title}</span>
+        {subtitle && <span className="truncate text-xs text-fg-subtle">{subtitle}</span>}
+      </span>
+      {trailing !== null && <span className={cn("shrink-0 text-fg-subtle [&_svg]:size-3.5", whenExpanded)}>{trailing ?? <ChevronsUpDownIcon />}</span>}
+    </button>
   );
 }
 
@@ -199,9 +421,11 @@ type SidebarItemProps = React.ComponentProps<"a"> & {
   tooltip?: string;
   /** Render your router's Link: <SidebarItem asChild icon={<HomeIcon />}><Link href="/">Home</Link></SidebarItem> */
   asChild?: boolean;
+  /** "rail": only in the icon rail (a stand-in for something that doesn't fit). "expanded": never in the rail. */
+  show?: "always" | "rail" | "expanded";
 };
 
-function SidebarItem({ icon, active, trailing, depth = 0, tooltip, asChild, className, children, ...props }: SidebarItemProps) {
+function SidebarItem({ icon, active, trailing, depth = 0, tooltip, asChild, show = "always", className, children, ...props }: SidebarItemProps) {
   const { collapsed, setMobileOpen } = useSidebar();
   const Comp = asChild ? Slot : "a";
   const label = tooltip ?? (typeof children === "string" ? children : undefined);
@@ -232,7 +456,8 @@ function SidebarItem({ icon, active, trailing, depth = 0, tooltip, asChild, clas
         "md:in-data-[sidebar=collapsed]:justify-center md:in-data-[sidebar=collapsed]:px-0",
         depth === 1 && "pl-7",
         depth === 2 && "pl-11",
-        depth > 0 && whenExpanded,
+        (depth > 0 || show === "expanded") && whenExpanded,
+        show === "rail" && whenRail,
         className,
       )}
       {...props}
@@ -289,6 +514,11 @@ export {
   SidebarFooter,
   SidebarGroup,
   SidebarItem,
+  SidebarSearch,
+  SidebarProfile,
+  useIsRail,
+  whenExpanded,
+  whenRail,
   SidebarTrigger,
   Topbar,
 };
