@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Density: `data-density="comfortable"`, a roomy scale for SaaS apps (15px base text, 40px controls, 52px rows,
+  10-20px radii, 272px sidebar, 64px topbar, spacing unit 4.8px). Line heights are now tokens
+  (`--dx-line-height-*`) so they scale with the type. The docs switcher and the settings example offer it.
 - Sidebar: `SidebarSearch` (filter box; a search button in the icon rail), collapsible `SidebarGroup`
   (`collapsible`, `storageKey`, `forceOpen`), `SidebarProfile` (two-line workspace / user button),
   `SidebarItem show="rail" | "expanded"`, exported `whenRail` / `whenExpanded` / `useIsRail`. The scrollbar shows

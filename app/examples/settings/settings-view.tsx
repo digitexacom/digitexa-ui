@@ -253,15 +253,16 @@ function Appearance() {
       </Group>
 
       <Group title="Density">
-        <Row title="Interface density" description="Control and row heights across the whole app.">
+        <Row title="Interface density" description="Type, control and row sizes across the whole app.">
           <ToggleGroup
             type="single"
             aria-label="Interface density"
             value={density}
-            onValueChange={(v) => v && setHtmlAttr("data-density", v === "compact" ? v : null, "dx-density")}
+            onValueChange={(v) => v && setHtmlAttr("data-density", v === "default" ? null : v, "dx-density")}
           >
-            <ToggleGroupItem value="default">Comfortable</ToggleGroupItem>
             <ToggleGroupItem value="compact">Compact</ToggleGroupItem>
+            <ToggleGroupItem value="default">Default</ToggleGroupItem>
+            <ToggleGroupItem value="comfortable">Comfortable</ToggleGroupItem>
           </ToggleGroup>
         </Row>
         <Row title="Sidebar density" description="Compact fits more projects on screen.">
@@ -271,7 +272,7 @@ function Appearance() {
             value={sidebarDensity}
             onValueChange={(v) => v && setHtmlAttr("data-sidebar-density", v === "compact" ? v : null, "dx-sidebar-density")}
           >
-            <ToggleGroupItem value="default">Comfortable</ToggleGroupItem>
+            <ToggleGroupItem value="default">Default</ToggleGroupItem>
             <ToggleGroupItem value="compact">Compact</ToggleGroupItem>
           </ToggleGroup>
         </Row>

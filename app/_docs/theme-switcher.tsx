@@ -71,11 +71,12 @@ export function ThemeSwitcher() {
         type="single"
         aria-label="Density"
         value={density}
-        onValueChange={(v) => v && setHtmlAttr("data-density", v === "compact" ? v : null, "dx-density")}
+        onValueChange={(v) => v && setHtmlAttr("data-density", v === "default" ? null : v, "dx-density")}
         className="max-md:hidden"
       >
-        <ToggleGroupItem value="default">Default</ToggleGroupItem>
         <ToggleGroupItem value="compact">Compact</ToggleGroupItem>
+        <ToggleGroupItem value="default">Default</ToggleGroupItem>
+        <ToggleGroupItem value="comfortable">Comfortable</ToggleGroupItem>
       </ToggleGroup>
 
       <ToggleGroup

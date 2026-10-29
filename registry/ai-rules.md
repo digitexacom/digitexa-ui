@@ -26,10 +26,11 @@ Follow these rules when you write or change UI.
 - Text placed on a `*-subtle` background must use the matching `*-fg` color (e.g. `bg-success-subtle text-success-fg`,
   `bg-status-review-subtle text-status-review-fg`, `bg-danger-subtle text-danger-fg-subtle`). These pairs are
   contrast-checked; other combinations are not.
-- Sizes: controls use `h-(--dx-control-sm|md|lg)` (24 / 30 / 36px, smaller with `data-density="compact"`), table
+- Sizes: controls use `h-(--dx-control-sm|md|lg)` (24 / 30 / 36px, smaller with `data-density="compact"`, 32 / 40 / 48px with `data-density="comfortable"`), table
   rows `h-(--dx-row-height)`. Don't hard-code `h-8`/`h-10` for controls.
 - Type scale is dense: `text-2xs` 10.5, `text-xs` 11.5, `text-sm` 12.5, `text-base` 13 (default), `text-md` 14,
-  `text-lg` 16, `text-xl` 19, `text-2xl` 24, `text-3xl` 30. Spacing is Tailwind's 4px scale.
+  `text-lg` 16, `text-xl` 19, `text-2xl` 24, `text-3xl` 30 (15px base with `data-density="comfortable"`).
+  Spacing is Tailwind's 4px scale (4.8px when comfortable).
 - Radius: `rounded-sm` 4, `rounded-md` 6 (controls), `rounded-lg` 9 (cards, menus), `rounded-xl` 12.
 - Shadows: `shadow-sm` (controls, cards), `shadow-md`, `shadow-lg` (menus, dialogs).
 - Layering, low to high: `z-(--dx-z-sticky)`, `z-(--dx-z-overlay)` (dialogs, sheets), `z-(--dx-z-dropdown)`
@@ -39,7 +40,7 @@ Follow these rules when you write or change UI.
 ## Theming
 
 - Theme, accent and density are attributes on `<html>`: `data-theme="light|dark"` (omit to follow the system),
-  `data-accent="ember|cobalt|moss|plum|rose|graphite"`, `data-density="compact"`, `data-motion="reduce|full"`,
+  `data-accent="ember|cobalt|moss|plum|rose|graphite"`, `data-density="compact|comfortable"`, `data-motion="reduce|full"`,
   `data-sidebar-density="compact"`, `data-sidebar="collapsed"`.
 - `data-accent` and `data-density` also work on any element to restyle one region.
 - Token values live in the theme stylesheet (`dx-tokens.css`). Change a value there rather than overriding it in
