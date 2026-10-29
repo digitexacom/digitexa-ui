@@ -7,7 +7,7 @@
     "build": "npm run registry && next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "next typegen && tsc --noEmit",
+    "typecheck": "npm run registry && next typegen && tsc --noEmit",
     "registry": "node scripts/build-registry.mjs",
     "check:contrast": "node scripts/check-contrast.mjs",
     "check": "npm run lint && npm run typecheck && npm run check:contrast && npm run build"
