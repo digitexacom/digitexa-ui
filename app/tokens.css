@@ -8,6 +8,7 @@
  *   <html data-theme="light|dark">         force a theme (default: follow the system)
  *   <html data-accent="ember|cobalt|…">    accent color (default: ember)
  *   <html data-density="compact">          tighter controls and rows
+ *   <html data-density="comfortable">      larger type, controls, radii and spacing
  *   <html data-motion="reduce|full">       override the OS reduced-motion setting
  *
  * data-accent and data-density also work on any element, to restyle just that part of the page.
@@ -37,6 +38,15 @@
   --dx-font-size-xl: 19px;
   --dx-font-size-2xl: 24px;
   --dx-font-size-3xl: 30px;
+  --dx-line-height-2xs: 14px;
+  --dx-line-height-xs: 16px;
+  --dx-line-height-sm: 18px;
+  --dx-line-height-base: 19px;
+  --dx-line-height-md: 20px;
+  --dx-line-height-lg: 22px;
+  --dx-line-height-xl: 26px;
+  --dx-line-height-2xl: 30px;
+  --dx-line-height-3xl: 36px;
 
   /* control and row heights (density-aware) */
   --dx-control-xs: 20px;
@@ -78,6 +88,41 @@
   --dx-control-md: 26px;
   --dx-control-lg: 32px;
   --dx-row-height: 32px;
+}
+
+/* roomy SaaS scale: <html data-density="comfortable"> */
+[data-density="comfortable"] {
+  --dx-font-size-2xs: 12px;
+  --dx-font-size-xs: 13px;
+  --dx-font-size-sm: 14px;
+  --dx-font-size-base: 15px;
+  --dx-font-size-md: 16px;
+  --dx-font-size-lg: 18px;
+  --dx-font-size-xl: 22px;
+  --dx-font-size-2xl: 28px;
+  --dx-font-size-3xl: 36px;
+  --dx-line-height-2xs: 16px;
+  --dx-line-height-xs: 18px;
+  --dx-line-height-sm: 20px;
+  --dx-line-height-base: 22px;
+  --dx-line-height-md: 24px;
+  --dx-line-height-lg: 26px;
+  --dx-line-height-xl: 30px;
+  --dx-line-height-2xl: 36px;
+  --dx-line-height-3xl: 42px;
+  --dx-control-xs: 24px;
+  --dx-control-sm: 32px;
+  --dx-control-md: 40px;
+  --dx-control-lg: 48px;
+  --dx-row-height: 52px;
+  --dx-radius: 10px;
+  --dx-radius-small: 6px;
+  --dx-radius-large: 14px;
+  --dx-radius-xlarge: 20px;
+  --dx-sidebar-width: 272px;
+  --dx-topbar-height: 64px;
+  /* Tailwind's spacing unit: every p-*, gap-*, m-* grows by a fifth */
+  --spacing: 0.3rem;
 }
 
 /* follows the OS setting; data-motion="reduce" forces it, data-motion="full" opts out */

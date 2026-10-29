@@ -48,15 +48,21 @@ primary buttons, focus rings, selection and links.
 
 ## Density
 
-| Token | Default | Compact |
-|---|---|---|
-| `--dx-control-sm` | 24px | 22px |
-| `--dx-control-md` | 30px | 26px |
-| `--dx-control-lg` | 36px | 32px |
-| `--dx-row-height` | 40px | 32px |
+| Token | Compact | Default | Comfortable |
+|---|---|---|---|
+| `--dx-control-sm` | 22px | 24px | 32px |
+| `--dx-control-md` | 26px | 30px | 40px |
+| `--dx-control-lg` | 32px | 36px | 48px |
+| `--dx-row-height` | 32px | 40px | 52px |
+| `--dx-font-size-base` | 13px | 13px | 15px |
+| `--dx-radius` | 6px | 6px | 10px |
+| `--dx-sidebar-width` | 232px | 232px | 272px |
+| `--dx-topbar-height` | 48px | 48px | 64px |
+| `--spacing` | 4px | 4px | 4.8px |
 
 Set `data-density="compact"` on `<html>` (or any element), or `data-sidebar-density="compact"` to tighten only the
-sidebar. Use `h-(--dx-control-md)` instead of fixed heights so your own UI follows along.
+sidebar. `data-density="comfortable"` is the roomy end for marketing-style SaaS apps: the whole type scale, line
+heights, radii and Tailwind's spacing unit grow with it, so padding and gaps follow without class changes. Use `h-(--dx-control-md)` instead of fixed heights so your own UI follows along.
 
 ## Motion
 
